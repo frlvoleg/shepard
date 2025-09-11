@@ -1,0 +1,1 @@
+export { PlayerWidget } from './PlayerWidget';

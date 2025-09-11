@@ -1,0 +1,45 @@
+.main_header {
+  height: 155px;
+  padding: 20px;
+}
+
+.header_top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 20px;
+}
+
+.header_top_menu {
+  ul {
+    display: flex;
+    gap: 35px;
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+  }
+}
+
+.header_bottom {
+  background-color: #0456b0;
+  padding: 20px;
+}
+
+.header_bottom_menu {
+  ul {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    list-style: none;
+
+    li {
+      button {
+        color: #fff !important;
+      }
+    }
+  }
+}

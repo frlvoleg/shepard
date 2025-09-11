@@ -1,0 +1,320 @@
+.sideTab {
+  width: 100%;
+  background-color: #ffffff;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  max-height: 660px;
+
+  // Custom scrollbar styling
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background: #94a3b8;
+    }
+  }
+
+  &::-webkit-scrollbar-thumb:active {
+    background: #64748b;
+  }
+
+  // Firefox scrollbar
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+.header {
+  padding: 20px;
+  border-bottom: 1px solid #f3f4f6;
+  background-color: #fafafa;
+
+  h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #111827;
+  }
+}
+
+.sidebarAccordion {
+  border-radius: 0;
+  box-shadow: none;
+}
+
+// Section content styling
+.sectionContent {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+// Configuration options
+.configOption {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+  }
+}
+
+.select {
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background-color: #ffffff;
+  font-size: 14px;
+  color: #111827;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+  }
+}
+
+// Color options
+.colorOptions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.colorButton {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #e5e7eb;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: #4f46e5;
+    transform: scale(1.1);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+  }
+}
+
+// Material options
+.materialOption {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  input[type='radio'] {
+    margin: 0;
+    cursor: pointer;
+  }
+
+  label {
+    font-size: 14px;
+    color: #374151;
+    cursor: pointer;
+    margin: 0;
+  }
+}
+
+// Feature options
+.featureOption {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  input[type='checkbox'] {
+    margin: 0;
+    cursor: pointer;
+  }
+
+  label {
+    font-size: 14px;
+    color: #374151;
+    cursor: pointer;
+    margin: 0;
+  }
+}
+
+// Pricing section
+.priceRange {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+  }
+}
+
+.slider {
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: #e5e7eb;
+  outline: none;
+  cursor: pointer;
+
+  &::-webkit-slider-thumb {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #4f46e5;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  &::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #4f46e5;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.priceDisplay {
+  text-align: center;
+  font-size: 12px;
+  color: #6b7280;
+  padding: 4px 8px;
+  background-color: #f9fafb;
+  border-radius: 4px;
+}
+
+.totalPrice {
+  padding: 12px 16px;
+  background-color: #f3f4f6;
+  border-radius: 6px;
+  text-align: center;
+
+  strong {
+    font-size: 16px;
+    color: #059669;
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .sideTab {
+    max-width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .header {
+    padding: 16px;
+
+    h2 {
+      font-size: 16px;
+    }
+  }
+}
+
+// Dark theme support
+.sideTab.dark {
+  background-color: #1f2937;
+  border-right-color: #374151;
+
+  .header {
+    background-color: #111827;
+    border-bottom-color: #374151;
+
+    h2 {
+      color: #f9fafb;
+    }
+  }
+
+  .configOption label,
+  .materialOption label,
+  .featureOption label,
+  .priceRange label {
+    color: #d1d5db;
+  }
+
+  .select {
+    background-color: #374151;
+    border-color: #4b5563;
+    color: #f9fafb;
+  }
+
+  .priceDisplay {
+    background-color: #374151;
+    color: #9ca3af;
+  }
+
+  .totalPrice {
+    background-color: #374151;
+
+    strong {
+      color: #10b981;
+    }
+  }
+}
+
+// Animation for smooth interactions
+.configOption,
+.materialOption,
+.featureOption {
+  transition: background-color 0.2s ease;
+  padding: 4px;
+  border-radius: 4px;
+
+  &:hover {
+    background-color: #f9fafb;
+  }
+}
+
+// Focus styles for accessibility
+input[type='radio']:focus,
+input[type='checkbox']:focus {
+  outline: 2px solid #4f46e5;
+  outline-offset: 2px;
+}
+
+.stickyBtn {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+
+  button {
+    height: 48px;
+    width: 100%;
+  }
+}
+
+// Темна тема
+.sideTab.dark .stickyBtn {
+  background: #1f2937;
+  border-top-color: #374151;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.3);
+}

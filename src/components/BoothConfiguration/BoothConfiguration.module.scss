@@ -1,0 +1,38 @@
+.booth_config {
+  margin-bottom: 70px;
+}
+
+.booth_config__title {
+  font-size: 25px;
+  font-weight: 700;
+
+  margin-bottom: 30px;
+}
+
+.booth_config__steps {
+}
+
+.line {
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 105px;
+    right: 105px;
+    height: 3px;
+    background-color: #eff3f8;
+  }
+
+  //   &::before {
+  //     content: '';
+  //     position: absolute;
+  //   }
+}
+
+.step_item {
+  position: absolute;
+  left: 135px;
+  z-index: 50;
+  top: -10px;
+}

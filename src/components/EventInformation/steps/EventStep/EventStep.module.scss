@@ -1,0 +1,12 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px 40px; // row-gap 24px, column-gap 40px
+  width: 100%;
+}
+
+.bottom_buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 100px;
+}

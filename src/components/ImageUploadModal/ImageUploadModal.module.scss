@@ -1,0 +1,54 @@
+.modalContent {
+  padding: 1.5rem;
+  min-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.uploadSection {
+  display: flex;
+  justify-content: center;
+}
+
+.previewSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.previewLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.previewImage {
+  max-width: 200px;
+  max-height: 200px;
+  object-fit: contain;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 0.5rem;
+  background: #f9fafb;
+}
+
+.fileName {
+  font-size: 0.75rem;
+  color: #6b7280;
+  text-align: center;
+  word-break: break-all;
+  max-width: 200px;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.actionButtons button {
+  min-width: 100px;
+}

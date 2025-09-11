@@ -1,0 +1,95 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  background: #fff;
+  cursor: pointer;
+  overflow: hidden;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.06s ease;
+  user-select: none;
+
+  &:hover {
+    box-shadow: 0 2px 8px rgba(16, 24, 40, 0.12);
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+.selected {
+  border-color: #1f6eee;
+}
+
+.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.radio {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.thumb {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: #f6f8fb;
+  display: grid;
+  place-items: center;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; // або contain — залежно від макету
+  }
+}
+
+.footer {
+  display: grid;
+  gap: 6px;
+  padding: 12px 14px 14px;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.customRadio {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #0f172a1a;
+  border-radius: 50%;
+  position: relative;
+  flex: 0 0 18px;
+}
+
+.card.selected .customRadio {
+  border-color: #1f6eee;
+}
+
+.card.selected .customRadio::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: #1f6eee;
+}
+
+.title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.price {
+  font-size: 13px;
+  color: #475467;
+}

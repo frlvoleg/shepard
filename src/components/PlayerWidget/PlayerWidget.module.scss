@@ -1,0 +1,22 @@
+.playerWidget {
+  display: flex;
+  // height: 100%;
+  width: 100%;
+}
+
+.playerContainer {
+  max-height: 400px;
+  position: relative;
+  width: 70%;
+  padding: 20px;
+}
+
+.sideTab {
+  width: 40%;
+  padding: 1rem;
+}
+
+.footer {
+  padding: 1rem;
+  border-top: 1px solid #e1e5e9;
+}

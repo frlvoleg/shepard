@@ -1,0 +1,1 @@
+export { AttributeContent, type AttributeSection } from './AttributeContent';

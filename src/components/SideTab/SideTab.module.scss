@@ -1,10 +1,13 @@
 .sideTab {
+  display: flex;
+  flex-direction: column;
+
   width: 100%;
   background-color: #ffffff;
   overflow-y: auto;
   overflow-x: hidden;
 
-  max-height: 660px;
+  min-height: calc(100vh - 190px);
 
   // Custom scrollbar styling
   &::-webkit-scrollbar {

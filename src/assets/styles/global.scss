@@ -150,3 +150,17 @@ body {
 #productContainer::backdrop {
   background: #f6f5f3;
 }
+
+.kpYuuO {
+  min-height: calc(100vh - 325px) !important;
+}
+
+// @media screen and (max-height: 1600px) {
+//   .kpYuuO {
+//     min-height: inherit !important;
+//   }
+// }
+
+// .kpYuuO > div:nth-child(1) {
+//   min-height: 350px !important;
+// }

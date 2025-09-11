@@ -54,3 +54,39 @@ export interface FormComponentProps {
   address?: any;
   includeNestedConfigurator?: boolean;
 }
+
+export interface ThreekitAsset {
+  id: string;
+  name: string;
+  type: 'item' | 'material' | 'model' | 'texture' | string; // extend as needed
+  as: string | null;
+  createdAt: string; // ISO date string
+  updatedAt: string; // ISO date string
+  deletedAt: string | null;
+  createdBy: string;
+  orgId: string;
+  description: string | null;
+  metadata: Record<string, any>;
+  tags: string[];
+  keywords: string[];
+  publicShare: string | null;
+  parentFolderId: string;
+  importedFileId: string | null;
+  advancedAr: boolean;
+  proxyId: string | null;
+  publishedAt: string | null;
+  defaultStageId: string | null;
+  defaultCompositeId: string | null;
+  deletedBy: string | null;
+  nodetags: string[];
+  updatedBy: string;
+  proxyType: 'material' | 'item' | string | null;
+  effects: any | null;
+  warnings: boolean;
+  fileSize: number;
+  tagids: string[];
+  categoryId: string | null;
+  head: string;
+  customId: string | null;
+  analytics: boolean;
+}

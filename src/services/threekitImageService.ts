@@ -1,3 +1,5 @@
+import { ThreekitAsset } from '../types';
+
 export interface ThreekitConfig {
   orgId: string;
   bearerToken: string;
@@ -58,11 +60,24 @@ export class ThreekitImageService {
     return { orgId, bearerToken };
   }
 
+  static async getAssetData(assetId: string): Promise<ThreekitAsset> {
+    const { orgId, bearerToken } = this.getThreekitConfig();
+    const assetUrl = `https://preview.threekit.com/api/assets/${assetId}?orgId=${orgId}&bearer_token=${bearerToken}`;
+
+    const response = await fetch(assetUrl, {
+      method: 'GET',
+      headers: { accept: 'application/json' },
+    });
+
+    const assetData = await response.json();
+    return assetData;
+  }
+
   static async getAssetThumbnail(assetId: string): Promise<string> {
     try {
       const { orgId, bearerToken } = this.getThreekitConfig();
       const assetUrl = `https://preview.threekit.com/api/assets/${assetId}?orgId=${orgId}&bearer_token=${bearerToken}`;
-      
+
       const response = await fetch(assetUrl, {
         method: 'GET',
         headers: { accept: 'application/json' },
@@ -70,27 +85,31 @@ export class ThreekitImageService {
 
       if (response.ok) {
         const assetData = await response.json();
-        console.log('Asset data:', assetData);
-        
+        // console.log('Asset data:', assetData);
+
         // Check for thumbnail URL
         if (assetData.thumbnail) {
           return `${assetData.thumbnail}?orgId=${orgId}&bearer_token=${bearerToken}`;
         }
-        
+
         // Check for preview images
         if (assetData.preview && assetData.preview.length > 0) {
           return `${assetData.preview[0]}?orgId=${orgId}&bearer_token=${bearerToken}`;
         }
-        
+
         // For item assets, try to get the first variant's thumbnail
-        if (assetData.type === 'item' && assetData.variants && assetData.variants.length > 0) {
+        if (
+          assetData.type === 'item' &&
+          assetData.variants &&
+          assetData.variants.length > 0
+        ) {
           const firstVariant = assetData.variants[0];
           if (firstVariant.thumbnail) {
             return `${firstVariant.thumbnail}?orgId=${orgId}&bearer_token=${bearerToken}`;
           }
         }
-        
-        // For material assets, try to get the proxy material data
+
+        // For material assets.
         if (assetData.proxyType === 'material' && assetData.proxyId) {
           console.log('Getting material proxy data for:', assetData.proxyId);
           const materialUrl = `https://preview.threekit.com/api/assets/${assetData.proxyId}?orgId=${orgId}&bearer_token=${bearerToken}`;
@@ -98,41 +117,53 @@ export class ThreekitImageService {
             method: 'GET',
             headers: { accept: 'application/json' },
           });
-          
+
           if (materialResponse.ok) {
             const materialData = await materialResponse.json();
-            console.log('Material data:', materialData);
-            
+            // console.log('Material data:', materialData);
+
             // Check for thumbnail in material
             if (materialData.thumbnail) {
               return `${materialData.thumbnail}?orgId=${orgId}&bearer_token=${bearerToken}`;
             }
-            
+
             // Check for preview in material
             if (materialData.preview && materialData.preview.length > 0) {
               return `${materialData.preview[0]}?orgId=${orgId}&bearer_token=${bearerToken}`;
             }
-            
+
             // Get the full material configuration to access texture properties
             const configUrl = `https://preview.threekit.com/api/materials/${assetData.proxyId}?orgId=${orgId}&bearer_token=${bearerToken}`;
             const configResponse = await fetch(configUrl, {
               method: 'GET',
               headers: { accept: 'application/json' },
             });
-            
+
             if (configResponse.ok) {
               const configData = await configResponse.json();
               console.log('Material config data:', configData);
-              
+
               // Look for texture maps in common properties
-              const textureProperties = ['baseColor', 'diffuse', 'albedo', 'color', 'map'];
+              const textureProperties = [
+                'baseColor',
+                'diffuse',
+                'albedo',
+                'color',
+                'map',
+              ];
               for (const prop of textureProperties) {
                 if (configData[prop] && typeof configData[prop] === 'object') {
                   const textureData = configData[prop];
                   if (textureData.assetId) {
-                    console.log(`Found texture in ${prop}:`, textureData.assetId);
+                    console.log(
+                      `Found texture in ${prop}:`,
+                      textureData.assetId
+                    );
                     // Try to get image from this texture asset
-                    const textureImageUrl = await this.getImageFromAsset(textureData.assetId);
+                    const textureImageUrl = await this.getImageFromAsset(
+                      textureData.assetId
+                    );
+                    console.log(textureImageUrl);
                     if (textureImageUrl) {
                       return textureImageUrl;
                     }
@@ -143,7 +174,7 @@ export class ThreekitImageService {
           }
         }
       }
-      
+
       return '';
     } catch (error) {
       console.error('Error getting asset thumbnail:', error);

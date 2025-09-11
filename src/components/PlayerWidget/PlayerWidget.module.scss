@@ -5,15 +5,17 @@
 }
 
 .playerContainer {
-  max-height: 400px;
   position: relative;
   width: 70%;
   padding: 20px;
+
+  min-height: calc(100vh - 155px);
 }
 
 .sideTab {
   width: 40%;
   padding: 1rem;
+  min-height: calc(100vh - 155px);
 }
 
 .footer {

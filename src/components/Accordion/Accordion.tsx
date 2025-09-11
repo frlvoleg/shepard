@@ -118,7 +118,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
     <div className={`${s.accordionItem} ${open && s.active_acc} `}>
       <button
         onClick={() => setOpen((o) => !o)}
-        className={s.accordionHeader}
+        className={`${s.accordionHeader} ${open && s.active}`}
         aria-controls={`${id}-panel`}
         aria-expanded={open}
       >

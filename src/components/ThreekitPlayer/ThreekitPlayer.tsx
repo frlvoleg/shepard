@@ -16,7 +16,7 @@ export const ThreekitPlayer = ({
 
   return (
     <div style={{ marginTop: '35px' }}>
-      <Player height="100%" width="100%" minHeight="450px" />
+      <Player height="100%" width="100%" />
     </div>
   );
 };

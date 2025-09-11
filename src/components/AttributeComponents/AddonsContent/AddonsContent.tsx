@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react';
 import { useAppSelector } from '../../../store/redux';
 import { AttributeSection } from '../AttributeContent';
 import { ThreekitImageService } from '../../../services/threekitImageService';
+import { useThreekitImageUrl } from '../../../hooks/useThreekitImageUrl';
+import fallbackImg from '../../../assets/gray.jpg';
+import s from './AddonsContent.module.scss';
 
 const AddonsContent = ({ section }: { section: AttributeSection }) => {
   const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(null);
@@ -22,6 +25,31 @@ const AddonsContent = ({ section }: { section: AttributeSection }) => {
       : null;
 
   console.log(currentAssetId);
+
+  // Fetch image URL when asset ID is available
+  // useEffect(() => {
+  //   const fetchImageUrl = async () => {
+  //     if (currentAssetId && typeof currentAssetId === 'string') {
+  //       try {
+  //         const imageUrl =
+  //           await ThreekitImageService.getImageFromAsset(currentAssetId);
+
+  //         console.log(imageUrl);
+
+  //         if (imageUrl) {
+  //           setCurrentImageUrl(imageUrl);
+  //         }
+  //       } catch (error) {
+  //         // Could not get image URL - that's okay, just means no preview
+  //         setCurrentImageUrl(null);
+  //       }
+  //     } else {
+  //       setCurrentImageUrl(null);
+  //     }
+  //   };
+
+  //   fetchImageUrl();
+  // }, [currentAssetId]);
 
   useEffect(() => {
     const fetchImageUrl = async () => {
@@ -48,15 +76,25 @@ const AddonsContent = ({ section }: { section: AttributeSection }) => {
     fetchImageUrl();
   }, [currentAssetId]);
 
-  console.log(currentImageUrl);
+  useEffect(() => {
+    const fetchMaterialData = async () => {
+      const res = await ThreekitImageService.getAssetData(currentAssetId);
+
+      console.log(res);
+      return res;
+    };
+
+    fetchMaterialData();
+  }, [currentAssetId]);
 
   return (
     <div>
-      {currentImageUrl ? (
-        <img src={currentImageUrl} alt="Asset preview" />
-      ) : (
-        <div>No image available for asset: {currentAssetId}</div>
-      )}
+      <div className={s.material_item}>
+        <div className={s.material_item__img}>
+          <img src={fallbackImg} alt="material image" />
+        </div>
+        <div>title</div>
+      </div>
     </div>
   );
 };

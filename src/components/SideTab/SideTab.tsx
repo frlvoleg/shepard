@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './SideTab.module.scss';
 import ConfiguratorAccordion from '../Accordion/Accordion';
 import { BaseButton } from '../../ui/baseButton/BaseButton';
+import Cart from '../Cart/Cart';
 
 interface SideTabProps {
   currentStepId?: string;
@@ -21,7 +22,7 @@ const SideTab: React.FC<SideTabProps> = ({
       case 'addons':
         return <ConfiguratorAccordion stepType="addons" />;
       case 'cart':
-        return <ConfiguratorAccordion stepType="cart" />;
+        return <Cart stepType="cart" />;
       default:
         return <ConfiguratorAccordion />;
     }
@@ -34,14 +35,28 @@ const SideTab: React.FC<SideTabProps> = ({
       case 'addons':
         return (
           <BaseButton onClick={() => onStepClick?.('cart')}>
-            Go to Cart
+            Add To Cart
           </BaseButton>
         );
       case 'cart':
         return (
-          <BaseButton onClick={() => onStepClick?.('branding')}>
-            Back to Branding
-          </BaseButton>
+          <div className="side-bottom-btn">
+            <BaseButton onClick={() => onStepClick?.('branding')}>
+              Buy Now
+            </BaseButton>
+            <BaseButton
+              variant="muted"
+              onClick={() => onStepClick?.('branding')}
+            >
+              Contact Sales
+            </BaseButton>
+            <BaseButton
+              variant="muted"
+              onClick={() => onStepClick?.('branding')}
+            >
+              Share Configuration
+            </BaseButton>
+          </div>
         );
       default:
         return <BaseButton onClick={onGoToAddons}>Go to Addons</BaseButton>;
@@ -49,9 +64,25 @@ const SideTab: React.FC<SideTabProps> = ({
   };
 
   return (
-    <div className={styles.sideTab}>
+    <div
+      className={`${styles.sideTab} ${currentStepId === 'cart' && styles.sideCart}`}
+    >
       {renderStepContent()}
-      <div className={styles.stickyBtn}>{renderButton()}</div>
+      <div className={styles.stickyBtn}>
+        {currentStepId === 'addons' && (
+          <div className={styles.price}>
+            <div>Total:</div>
+            <div>$9,000.00</div>
+          </div>
+        )}
+        {currentStepId === 'cart' && (
+          <div className={styles.price}>
+            <div>Total:</div>
+            <div>$15,000.00</div>
+          </div>
+        )}
+        {renderButton()}
+      </div>
     </div>
   );
 };

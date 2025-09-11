@@ -32,12 +32,42 @@ export const PlayerWidget = () => {
 
   return (
     <div className={s.playerWidget} id="productContainer">
-      <div className={s.playerContainer}>
-        <BoothConfiguration
-          steps={stepsWithCompletionState}
-          currentStepId={currentStepId}
-          onStepClick={handleStepClick}
-        />
+      <div
+        className={`${s.playerContainer} ${currentStepId === 'cart' && 'cart'} `}
+      >
+        {currentStepId !== 'cart' ? (
+          <BoothConfiguration
+            steps={stepsWithCompletionState}
+            currentStepId={currentStepId}
+            onStepClick={handleStepClick}
+          />
+        ) : (
+          <div>
+            <h2>Your Configuration</h2>
+            <div className={s.parent}>
+              <div className={s.info_item}>
+                <h5>Booth Configuration</h5>
+                <p>Event name: Connections 2025</p>
+                <p>Event start date - end date: 6/11/25-6/12/25</p>
+                <p>Event city: Chicago</p>
+                <p>Event venue: McCormick Place</p>
+                <p>Size of space: 20 x 20</p>
+              </div>
+              <div className={s.info_item}>
+                <h5>Company Information</h5>
+                <p>Company name: Threekit</p>
+                <p>Company Address: Threekit</p>
+                <p>Company Contacts: Threekit</p>
+              </div>
+              <div className={s.info_item}>
+                <h5>Services</h5>
+                <p>Premium Booth Branding</p>
+                <p>Burgandy Carpet</p>
+              </div>
+            </div>
+          </div>
+        )}
+
         <ThreekitPlayer />
       </div>
       <div className={s.sideTab}>

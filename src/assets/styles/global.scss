@@ -155,6 +155,14 @@ body {
   min-height: calc(100vh - 325px) !important;
 }
 
+body .cart .kpYuuO {
+  min-height: calc(100vh - 430px) !important;
+}
+
+body .cart .kpYuuO > div:nth-child(1) {
+  min-height: 550px;
+}
+
 // @media screen and (max-height: 1600px) {
 //   .kpYuuO {
 //     min-height: inherit !important;
@@ -164,3 +172,9 @@ body {
 // .kpYuuO > div:nth-child(1) {
 //   min-height: 350px !important;
 // }
+
+.side-bottom-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

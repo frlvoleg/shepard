@@ -14,11 +14,28 @@
 
 .sideTab {
   width: 40%;
-  padding: 1rem;
+  padding: 20px;
   min-height: calc(100vh - 155px);
 }
 
 .footer {
   padding: 1rem;
   border-top: 1px solid #e1e5e9;
+}
+
+.info_item {
+  padding: 12px;
+  border: 1px solid #eaeef3;
+
+  h5 {
+    margin-bottom: 10px;
+  }
+}
+
+.parent {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 1fr;
+  grid-column-gap: 15px;
+  grid-row-gap: px;
 }

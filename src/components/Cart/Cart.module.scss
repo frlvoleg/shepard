@@ -1,0 +1,18 @@
+.side_cart {
+  flex-grow: 1;
+}
+
+.side_cart__list {
+  li {
+    display: flex;
+    align-items: center;
+
+    padding-top: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e1e5e8;
+
+    span {
+      flex: 1 1 0;
+    }
+  }
+}

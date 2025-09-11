@@ -1,12 +1,24 @@
-#   React build stage
-FROM node:16 as react-build
-
+# Build stage
+FROM node:20-alpine AS build
 WORKDIR /app
 
-COPY package.json /app/
+# ВАЖЛИВО: копіюємо і package.json, і yarn.lock
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
 
-RUN yarn install
+COPY . .
+# має бути скрипт "build" у package.json
+RUN yarn build
 
-COPY . /app/
+# Runtime stage
+FROM node:20-alpine
+WORKDIR /app
+RUN yarn global add serve
+# якщо твій білд у /build (CRA/trebble-scripts) — лишаємо так;
+# якщо у /dist — заміни шлях нижче на /app/dist
+COPY --from=build /app/build ./build
 
-CMD yarn serve
+# Платформа зазвичай дає PORT — слухай його
+ENV PORT=8080
+EXPOSE 8080
+CMD ["serve", "-s", "build", "-l", "8080"]

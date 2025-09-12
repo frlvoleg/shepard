@@ -6,6 +6,11 @@ import {
   ImageUploadConfig,
 } from '../../ImageUploadModal/ImageUploadModal';
 import {
+  ColorPickerModal,
+  ColorPickerConfig,
+  ColorValue,
+} from '../../ColorPickerModal/ColorPickerModal';
+import {
   ThreekitConfigurationService,
   ThreekitImageService,
 } from '../../../services/threekitImageService';
@@ -30,7 +35,9 @@ export const AttributeContent: React.FC<AttributeContentProps> = ({
   const [saving, setSaving] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [showImageModal, setShowImageModal] = useState(false);
+  const [showColorModal, setShowColorModal] = useState(false);
   const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(null);
+  const [currentColor, setCurrentColor] = useState<ColorValue | null>(null);
   const dispatch = useAppDispatch();
 
   // Get the uploaded image from Redux store
@@ -47,6 +54,14 @@ export const AttributeContent: React.FC<AttributeContentProps> = ({
     'assetId' in currentAttribute
       ? currentAttribute.assetId
       : null;
+
+  // Check if current attribute is a color value
+  const isColorAttribute =
+    currentAttribute &&
+    typeof currentAttribute === 'object' &&
+    'r' in currentAttribute &&
+    'g' in currentAttribute &&
+    'b' in currentAttribute;
 
   // Fetch image URL when asset ID is available
   useEffect(() => {
@@ -70,13 +85,30 @@ export const AttributeContent: React.FC<AttributeContentProps> = ({
     fetchImageUrl();
   }, [currentAssetId]);
 
+  // Update current color when attribute changes
+  useEffect(() => {
+    if (isColorAttribute) {
+      setCurrentColor(currentAttribute as ColorValue);
+    } else {
+      setCurrentColor(null);
+    }
+  }, [currentAttribute, isColorAttribute]);
+
   const imageConfig: ImageUploadConfig = {
     attributeName: section.attributeName,
     imageType: section.imageType,
   };
 
+  const colorConfig: ColorPickerConfig = {
+    attributeName: 'Set_Color',
+  };
+
   const handleImageUploaded = (imageUrl: string) => {
     setCurrentImageUrl(imageUrl);
+  };
+
+  const handleColorChanged = (color: ColorValue) => {
+    setCurrentColor(color);
   };
 
   const handleSaveConfiguration = async () => {
@@ -116,7 +148,9 @@ export const AttributeContent: React.FC<AttributeContentProps> = ({
 
         <div className={s.buttonRow}>
           {section.showColorButton && (
-            <BaseButton variant="muted">Set color</BaseButton>
+            <BaseButton variant="muted" onClick={() => setShowColorModal(true)}>
+              {currentColor ? 'Change Color' : 'Set Color'}
+            </BaseButton>
           )}
           <BaseButton
             variant="primary"
@@ -135,6 +169,17 @@ export const AttributeContent: React.FC<AttributeContentProps> = ({
         config={imageConfig}
         onClose={() => setShowImageModal(false)}
         onImageUploaded={handleImageUploaded}
+        onUnsavedChanges={setHasUnsavedChanges}
+      />
+
+      {/* Color Picker Modal */}
+      <ColorPickerModal
+        show={showColorModal}
+        title={`Choose ${section.title} Color`}
+        config={colorConfig}
+        currentColor={currentColor || undefined}
+        onClose={() => setShowColorModal(false)}
+        onColorChanged={handleColorChanged}
         onUnsavedChanges={setHasUnsavedChanges}
       />
     </div>

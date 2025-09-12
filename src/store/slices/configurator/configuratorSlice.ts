@@ -50,17 +50,48 @@ export const loadConfiguration = createAsyncThunk(
   }
 );
 
+const serializeValue = (value: any) => {
+  // Convert Threekit Color instances to serializable format
+  if (
+    value &&
+    typeof value === 'object' &&
+    'r' in value &&
+    'g' in value &&
+    'b' in value
+  ) {
+    // Ensure it's a plain object, not a class instance
+    return {
+      r: Number(value.r),
+      g: Number(value.g),
+      b: Number(value.b),
+    };
+  }
+  return value;
+};
+
 const buildSelected = (attrs: AttributeThreekit[]) =>
-  Object.fromEntries(attrs.map((a) => [a.name, a.value]));
+  Object.fromEntries(attrs.map((a) => [a.name, serializeValue(a.value)]));
 
 const slice = createSlice({
   name: 'configurator',
   initialState,
   reducers: {
     setInitAttributes(state, { payload }: PayloadAction<AttributeThreekit[]>) {
-      state.attributes = payload;
+      // Serialize all attributes to ensure no non-serializable values
+      const serializedAttributes = payload.map((attr) => ({
+        ...attr,
+        defaultValue: serializeValue(attr.defaultValue),
+        value: serializeValue(attr.value),
+        values: attr.values?.map((val: any) =>
+          typeof val === 'object' && val.value !== undefined
+            ? { ...val, value: serializeValue(val.value) }
+            : val
+        ),
+      }));
+
+      state.attributes = serializedAttributes;
       state.selectedConfiguration = {
-        ...buildSelected(payload),
+        ...buildSelected(serializedAttributes),
         ...state.selectedConfiguration,
       };
     },

@@ -8,7 +8,6 @@ import { AppDispatch } from '../../store/store';
 import { setInitAttributes } from '../../store/slices/configurator/configuratorSlice';
 import { AttributeThreekit } from '../../store/slices/configurator/types';
 import logo from '../../assets/logo.svg';
-
 import s from './LoagingPage.module.scss';
 import { ThreekitService } from '../../services/threekitService';
 

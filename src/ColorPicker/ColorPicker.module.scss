@@ -1,0 +1,81 @@
+/* ColorPicker.module.scss або поряд із твоїми стилями */
+.cmp-color-picker {
+  user-select: none;
+}
+
+.sv-wrap {
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e1e5e9;
+
+  height: 280px !important;
+  width: 500px !important;
+}
+
+.sv-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+}
+
+.sv-cursor {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  margin-left: -7px;
+  margin-top: -7px;
+  border: 2px solid #fff;
+  outline: 2px solid rgba(0, 0, 0, 0.6);
+  border-radius: 50%;
+  pointer-events: none;
+  box-shadow: 0 0 0 1px var(--hue, transparent);
+}
+
+.hue-wrap {
+  margin-top: 12px;
+  padding: 0 2px;
+}
+
+.hue-input {
+  width: 500px !important;
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 12px;
+  background: linear-gradient(
+    to right,
+    #f00 0%,
+    #ff0 17%,
+    #0f0 33%,
+    #0ff 50%,
+    #00f 67%,
+    #f0f 83%,
+    #f00 100%
+  );
+  outline: none;
+  border: 1px solid #e1e5e9;
+}
+
+/* Тумблер range */
+.hue-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #333;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}
+.hue-input::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #333;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}

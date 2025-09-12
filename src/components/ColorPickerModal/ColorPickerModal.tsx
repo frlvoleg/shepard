@@ -81,6 +81,9 @@ export const ColorPickerModal: React.FC<ColorPickerModalProps> = ({
   );
   const dispatch = useAppDispatch();
 
+  // Get the default Set_Color from configuration
+  const defaultSetColor = selectedConfig?.Set_Color;
+
   // Save a color to lastColors list
   const saveColorToHistory = (color: ColorValue) => {
     setLastColors(prev => {
@@ -257,7 +260,10 @@ export const ColorPickerModal: React.FC<ColorPickerModalProps> = ({
               <label className={s.label}>Last Colors</label>
               <div className={s.grid}>
                 {Array.from({ length: 12 }).map((_, index) => {
-                  const color = lastColors[index];
+                  // First slot shows current color or default Set_Color, rest show history
+                  const color = index === 0 ? 
+                    (currentColor || defaultSetColor) : 
+                    lastColors[index - 1];
                   return (
                     <div 
                       key={index}

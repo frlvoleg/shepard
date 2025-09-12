@@ -1,6 +1,11 @@
+@import './fonts';
+
 body {
   min-height: 90vh;
   background-color: #fff !important;
+
+  font-family: 'Montserrat';
+  font-weight: 400;
 }
 
 /* Main container styles - all styles contained inside this scope */

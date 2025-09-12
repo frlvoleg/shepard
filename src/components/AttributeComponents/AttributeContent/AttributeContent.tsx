@@ -191,24 +191,34 @@ export const AttributeContent: React.FC<AttributeContentProps> = ({
                   // Handle delete functionality
                   if (currentColor) {
                     const defaultColor = { r: 1, g: 1, b: 1 };
-                    
+
                     // Update Threekit configurator.
                     if (window.threekit?.configurator?.setConfiguration) {
                       await window.threekit.configurator.setConfiguration({
                         [section.attributeName]: defaultColor,
                       });
                     }
-                    
+
                     // Update Redux state
-                    dispatch(updateSelectedValue({
-                      name: section.attributeName,
-                      value: defaultColor as any,
-                    }));
-                    
+                    dispatch(
+                      updateSelectedValue({
+                        name: section.attributeName,
+                        value: defaultColor as any,
+                      })
+                    );
+
                     setCurrentColor(defaultColor);
                     setHasUnsavedChanges(true);
                   }
                   if (currentImageUrl) {
+                    const defaultImg = '';
+
+                    if (window.threekit?.configurator?.setConfiguration) {
+                      await window.threekit.configurator.setConfiguration({
+                        [section.attributeName]: defaultImg,
+                      });
+                    }
+
                     // Clear image logic here
                     setCurrentImageUrl(null);
                   }
@@ -223,7 +233,11 @@ export const AttributeContent: React.FC<AttributeContentProps> = ({
               {section.showColorButton && (
                 <BaseButton
                   variant="muted"
-                  onClick={section.id === 'global-color' ? () => setShowColorModal(true) : undefined}
+                  onClick={
+                    section.id === 'global-color'
+                      ? () => setShowColorModal(true)
+                      : undefined
+                  }
                 >
                   Set Color
                 </BaseButton>
@@ -238,7 +252,6 @@ export const AttributeContent: React.FC<AttributeContentProps> = ({
             </>
           )}
         </div>
-
       </div>
 
       {/* Image Upload Modal */}

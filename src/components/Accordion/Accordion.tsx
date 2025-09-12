@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import s from './Accordion.module.scss';
 import {
   AttributeContent,
@@ -101,7 +101,8 @@ interface AccordionItemProps {
   id: string;
   title: string;
   badge?: string;
-  defaultOpen?: boolean;
+  isOpen: boolean;
+  onToggle: () => void;
   children: React.ReactNode;
 }
 
@@ -109,25 +110,24 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
   id,
   title,
   badge,
-  defaultOpen,
+  isOpen,
+  onToggle,
   children,
 }) => {
-  const [open, setOpen] = useState(!!defaultOpen);
-
   return (
-    <div className={`${s.accordionItem} ${open && s.active_acc} `}>
+    <div className={`${s.accordionItem} ${isOpen && s.active_acc} `}>
       <button
-        onClick={() => setOpen((o) => !o)}
-        className={`${s.accordionHeader} ${open && s.active}`}
+        onClick={onToggle}
+        className={`${s.accordionHeader} ${isOpen && s.active}`}
         aria-controls={`${id}-panel`}
-        aria-expanded={open}
+        aria-expanded={isOpen}
       >
         {badge && <Badge label={badge} />}
         <span className={s.accordionTitle}>{title}</span>
-        <Chevron open={open} />
+        <Chevron open={isOpen} />
       </button>
 
-      {open && (
+      {isOpen && (
         <div id={`${id}-panel`} className={s.accordionPanel}>
           {children}
         </div>
@@ -182,6 +182,20 @@ export default function ConfiguratorAccordion({
   const badges = getBadges();
   const defaultOpenId = getDefaultOpenId();
 
+  // State to track which accordion item is open
+  const [openItemId, setOpenItemId] = useState<string | null>(defaultOpenId);
+
+  // Reset to first item when stepType changes
+  useEffect(() => {
+    const firstSectionId = sections[0]?.id || null;
+    setOpenItemId(firstSectionId);
+  }, [stepType]);
+
+  // Handle toggling accordion items
+  const handleToggle = (itemId: string) => {
+    setOpenItemId(prevId => prevId === itemId ? null : itemId);
+  };
+
   return (
     <div className={s.accordion}>
       {sections.map((section, index) => {
@@ -193,7 +207,8 @@ export default function ConfiguratorAccordion({
             id={section.id}
             title={section.title === 'Background' ? 'Cabinet' : section.title}
             badge={badge}
-            defaultOpen={section.id === defaultOpenId}
+            isOpen={openItemId === section.id}
+            onToggle={() => handleToggle(section.id)}
           >
             {stepType === 'addons' && section.id === 'carpet' ? (
               <AddonsContent section={section} />

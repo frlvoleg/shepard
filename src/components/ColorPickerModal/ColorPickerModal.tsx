@@ -6,6 +6,15 @@ import { updateSelectedValue } from '../../store/slices/configurator/configurato
 import s from './ColorPickerModal.module.scss';
 import ColorPicker from '../../ColorPicker/ColorPicker';
 
+// Helper function for RGB to HEX conversion
+const rgbToHex = (color: { r: number; g: number; b: number }): string => {
+  const toHex = (value: number) => {
+    const hex = Math.round(value).toString(16);
+    return hex.length === 1 ? '0' + hex : hex;
+  };
+  return `#${toHex(color.r)}${toHex(color.g)}${toHex(color.b)}`;
+};
+
 export interface ColorValue {
   r: number;
   g: number;
@@ -43,6 +52,14 @@ export const ColorPickerModal: React.FC<ColorPickerModalProps> = ({
     g: String(Math.round((currentColor?.g || 1) * 255)),
     b: String(Math.round((currentColor?.b || 1) * 255)),
   });
+  const [hexInput, setHexInput] = useState(() => {
+    const rgb255 = {
+      r: Math.round((currentColor?.r || 1) * 255),
+      g: Math.round((currentColor?.g || 1) * 255),
+      b: Math.round((currentColor?.b || 1) * 255),
+    };
+    return rgbToHex(rgb255);
+  });
 
   const selectedConfig = useAppSelector(
     (s) => s.configurator.selectedConfiguration
@@ -56,11 +73,17 @@ export const ColorPickerModal: React.FC<ColorPickerModalProps> = ({
   useEffect(() => {
     if (currentColor) {
       setSelectedColor(currentColor);
+      const rgb255 = {
+        r: Math.round(currentColor.r * 255),
+        g: Math.round(currentColor.g * 255),
+        b: Math.round(currentColor.b * 255),
+      };
       setRgbInputs({
-        r: String(Math.round(currentColor.r * 255)),
-        g: String(Math.round(currentColor.g * 255)),
-        b: String(Math.round(currentColor.b * 255)),
+        r: String(rgb255.r),
+        g: String(rgb255.g),
+        b: String(rgb255.b),
       });
+      setHexInput(rgbToHex({ r: rgb255.r, g: rgb255.g, b: rgb255.b }));
     }
   }, [currentColor]);
 
@@ -71,31 +94,53 @@ export const ColorPickerModal: React.FC<ColorPickerModalProps> = ({
     const numValue = Math.max(0, Math.min(255, parseInt(value) || 0));
     const normalizedValue = numValue / 255;
 
-    setRgbInputs((prev) => ({ ...prev, [channel]: value }));
-    setSelectedColor((prev) => ({ ...prev, [channel]: normalizedValue }));
-  };
+    const newRgbInputs = { ...rgbInputs, [channel]: value };
+    setRgbInputs(newRgbInputs);
 
-  const handleColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const hex = event.target.value;
-    const r = parseInt(hex.slice(1, 3), 16) / 255;
-    const g = parseInt(hex.slice(3, 5), 16) / 255;
-    const b = parseInt(hex.slice(5, 7), 16) / 255;
+    const newSelectedColor = { ...selectedColor, [channel]: normalizedValue };
+    setSelectedColor(newSelectedColor);
 
-    const newColor = { r, g, b };
-    setSelectedColor(newColor);
-    setRgbInputs({
-      r: String(Math.round(r * 255)),
-      g: String(Math.round(g * 255)),
-      b: String(Math.round(b * 255)),
-    });
-  };
-
-  const rgbToHex = (color: ColorValue): string => {
-    const toHex = (value: number) => {
-      const hex = Math.round(value * 255).toString(16);
-      return hex.length === 1 ? '0' + hex : hex;
+    // Update hex input
+    const rgb255 = {
+      r: Math.round(newSelectedColor.r * 255),
+      g: Math.round(newSelectedColor.g * 255),
+      b: Math.round(newSelectedColor.b * 255),
     };
-    return `#${toHex(color.r)}${toHex(color.g)}${toHex(color.b)}`;
+    setHexInput(rgbToHex(rgb255));
+  };
+
+  const handleHexChange = (value: string) => {
+    // Remove # if present and ensure it's uppercase
+    let hex = value.replace('#', '').toUpperCase();
+
+    // Only allow valid hex characters
+    if (!/^[0-9A-F]*$/.test(hex)) return;
+
+    // Limit to 6 characters
+    if (hex.length > 6) hex = hex.slice(0, 6);
+
+    setHexInput('#' + hex);
+
+    // If we have a complete 6-character hex, convert to RGB
+    if (hex.length === 6) {
+      const r = parseInt(hex.slice(0, 2), 16);
+      const g = parseInt(hex.slice(2, 4), 16);
+      const b = parseInt(hex.slice(4, 6), 16);
+
+      // Update RGB inputs
+      setRgbInputs({
+        r: String(r),
+        g: String(g),
+        b: String(b),
+      });
+
+      // Update selected color (normalized)
+      setSelectedColor({
+        r: r / 255,
+        g: g / 255,
+        b: b / 255,
+      });
+    }
   };
 
   const handleSaveColor = async () => {
@@ -146,6 +191,21 @@ export const ColorPickerModal: React.FC<ColorPickerModalProps> = ({
         {/* RGB Inputs */}
         <div className={s.preview_colors}>
           <div className={s.rgbSection}>
+            <label className={s.label}>HEX</label>
+            <div className={s.inputGroup}>
+              <input
+                type="text"
+                value={hexInput}
+                onChange={(e) => handleHexChange(e.target.value)}
+                className={s.rgbInput}
+                maxLength={7}
+                placeholder="#FF0000"
+                style={{ textAlign: 'center', fontFamily: 'monospace' }}
+              />
+            </div>
+          </div>
+
+          {/* <div className={s.rgbSection}>
             <label className={s.label}>RGB Values (0-255):</label>
             <div className={s.rgbInputs}>
               <div className={s.inputGroup}>
@@ -180,7 +240,7 @@ export const ColorPickerModal: React.FC<ColorPickerModalProps> = ({
                 />
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
         <div className={s.preview}>
           {/* Color Preview */}

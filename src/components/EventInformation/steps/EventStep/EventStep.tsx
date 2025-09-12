@@ -1,3 +1,5 @@
+import ArrowRight from '../../../../assets/svg/ArrowRight';
+import BackArrow from '../../../../assets/svg/BackArrow';
 import { BaseButton } from '../../../../ui/baseButton/BaseButton';
 import { BaseInput } from '../../../../ui/baseInput/BaseInput';
 import s from './EventStep.module.scss';
@@ -26,9 +28,12 @@ const EventStep = ({
         />
       </div>
       <div className={s.bottom_buttons}>
-        <BaseButton variant="muted">Exit customizer</BaseButton>
+        <BaseButton variant="muted">
+          <BackArrow /> Exit customizer{' '}
+        </BaseButton>
         <BaseButton variant="primary" onClick={() => handleStepClick('setup')}>
           Next step
+          <ArrowRight />
         </BaseButton>
       </div>
     </>

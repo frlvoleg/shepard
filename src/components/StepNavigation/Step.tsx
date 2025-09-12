@@ -7,11 +7,11 @@ interface StepProps {
   onClick?: () => void;
 }
 
-export const Step: React.FC<StepProps> = ({ 
-  isActive = false, 
-  isCompleted = false, 
+export const Step: React.FC<StepProps> = ({
+  isActive = false,
+  isCompleted = false,
   stepNumber,
-  onClick 
+  onClick,
 }) => {
   const handleClick = () => {
     if (onClick) {
@@ -22,7 +22,10 @@ export const Step: React.FC<StepProps> = ({
   // Completed step - green with checkmark
   if (isCompleted) {
     return (
-      <div onClick={handleClick} style={{ cursor: onClick ? 'pointer' : 'default' }}>
+      <div
+        onClick={handleClick}
+        style={{ cursor: onClick ? 'pointer' : 'default' }}
+      >
         <svg
           width="25"
           height="24"
@@ -32,7 +35,7 @@ export const Step: React.FC<StepProps> = ({
         >
           <path
             d="M0.166504 12C0.166504 5.37258 5.53909 0 12.1665 0C18.7939 0 24.1665 5.37258 24.1665 12C24.1665 18.6274 18.7939 24 12.1665 24C5.53909 24 0.166504 18.6274 0.166504 12Z"
-            fill="#059669"
+            fill="#0a4ea2"
           />
           <path
             d="M8.16602 12L11.166 15L16.166 9"
@@ -49,7 +52,10 @@ export const Step: React.FC<StepProps> = ({
   // Active step - blue with white center
   if (isActive) {
     return (
-      <div onClick={handleClick} style={{ cursor: onClick ? 'pointer' : 'default' }}>
+      <div
+        onClick={handleClick}
+        style={{ cursor: onClick ? 'pointer' : 'default' }}
+      >
         <svg
           width="25"
           height="24"
@@ -82,7 +88,10 @@ export const Step: React.FC<StepProps> = ({
 
   // Default step - gray outline
   return (
-    <div onClick={handleClick} style={{ cursor: onClick ? 'pointer' : 'default' }}>
+    <div
+      onClick={handleClick}
+      style={{ cursor: onClick ? 'pointer' : 'default' }}
+    >
       <svg
         width="25"
         height="24"

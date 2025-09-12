@@ -3,6 +3,10 @@ import styles from './SideTab.module.scss';
 import ConfiguratorAccordion from '../Accordion/Accordion';
 import { BaseButton } from '../../ui/baseButton/BaseButton';
 import Cart from '../Cart/Cart';
+import ArrowRight from '../../assets/svg/ArrowRight';
+import CartIcon from '../../assets/svg/CartIcon';
+import PhoneIcon from '../../assets/svg/PhoneIcon';
+import ShareIcon from '../../assets/svg/ShareIcon';
 
 interface SideTabProps {
   currentStepId?: string;
@@ -31,11 +35,17 @@ const SideTab: React.FC<SideTabProps> = ({
   const renderButton = () => {
     switch (currentStepId) {
       case 'branding':
-        return <BaseButton onClick={onGoToAddons}>Go to Addons</BaseButton>;
+        return (
+          <BaseButton onClick={onGoToAddons}>
+            Go to Addons
+            <ArrowRight />
+          </BaseButton>
+        );
       case 'addons':
         return (
           <BaseButton onClick={() => onStepClick?.('cart')}>
             Add To Cart
+            <CartIcon />
           </BaseButton>
         );
       case 'cart':
@@ -43,18 +53,21 @@ const SideTab: React.FC<SideTabProps> = ({
           <div className="side-bottom-btn">
             <BaseButton onClick={() => onStepClick?.('branding')}>
               Buy Now
+              <CartIcon />
             </BaseButton>
             <BaseButton
               variant="muted"
               onClick={() => onStepClick?.('branding')}
             >
               Contact Sales
+              <PhoneIcon />
             </BaseButton>
             <BaseButton
               variant="muted"
               onClick={() => onStepClick?.('branding')}
             >
               Share Configuration
+              <ShareIcon />
             </BaseButton>
           </div>
         );

@@ -42,22 +42,28 @@ export const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const dispatch = useAppDispatch();
 
+  const processFile = (file: File) => {
+    try {
+      ImageValidationService.validateFile(file);
+      setSelectedFile(file);
+
+      // Create preview URL
+      const objectUrl = URL.createObjectURL(file);
+      setPreviewUrl(objectUrl);
+    } catch (error) {
+      if (error instanceof ImageValidationError) {
+        alert(error.message);
+      }
+    }
+  };
+
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      try {
-        ImageValidationService.validateFile(file);
-        setSelectedFile(file);
-
-        // Create preview URL
-        const objectUrl = URL.createObjectURL(file);
-        setPreviewUrl(objectUrl);
-      } catch (error) {
-        if (error instanceof ImageValidationError) {
-          alert(error.message);
-        }
-      }
+      processFile(file);
     }
+    // Reset the input value so the same file can be selected again if needed
+    event.target.value = '';
   };
 
   const handleUpload = async () => {
@@ -142,7 +148,10 @@ export const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
   const handleDragLeave = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsDragActive(false);
+    // Only set dragActive to false if we're leaving the main container
+    if (e.currentTarget === e.target) {
+      setIsDragActive(false);
+    }
   };
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -158,59 +167,56 @@ export const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
     const files = e.dataTransfer.files;
     if (files && files[0]) {
       const file = files[0];
-      if (file.type.startsWith('image/')) {
-        setSelectedFile(file);
-        setPreviewUrl(URL.createObjectURL(file));
-      }
+      processFile(file);
     }
   };
 
   return (
     <Modal show={show} title={title} handleClose={handleClose}>
       <div className={s.modalContent}>
-        <div className={s.uploadSection}>
-          <div
-            className={`${s.uploadBox} ${isDragActive ? s.dragActive : ''}`}
-            onClick={triggerFileInput}
-            onDragEnter={handleDragEnter}
-            onDragLeave={handleDragLeave}
-            onDragOver={handleDragOver}
-            onDrop={handleDrop}
-            style={{ opacity: uploading ? 0.6 : 1 }}
-          >
-            <div className={s.uploadInner}>
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M12 4v16m8-8H4"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              <p className={s.uploadText}>
-                Drag & Drop files or <span className={s.browse}>browse</span>
-              </p>
-              <p className={s.uploadSubtext}>
-                Supported files: JPG, PNG, GIF, up to 10MB
-              </p>
+        {!previewUrl && (
+          <div className={s.uploadSection}>
+            <div
+              className={`${s.uploadBox} ${isDragActive ? s.dragActive : ''}`}
+              onClick={triggerFileInput}
+              onDragEnter={handleDragEnter}
+              onDragLeave={handleDragLeave}
+              onDragOver={handleDragOver}
+              onDrop={handleDrop}
+              style={{ opacity: uploading ? 0.6 : 1 }}
+            >
+              <div className={s.uploadInner}>
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M12 4v16m8-8H4"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                <p className={s.uploadText}>
+                  Drag & Drop files or <span className={s.browse}>browse</span>
+                </p>
+                <p className={s.uploadSubtext}>
+                  Supported files: JPG, PNG, GIF, up to 10MB
+                </p>
+              </div>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleFileSelect}
+                style={{ display: 'none' }}
+                disabled={uploading}
+              />
             </div>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              onChange={handleFileSelect}
-              className={s.hiddenInput}
-              disabled={uploading}
-            />
           </div>
-        </div>
+        )}
 
         {previewUrl && (
           <div className={s.previewSection}>
-            <div className={s.previewLabel}>Preview:</div>
             <img src={previewUrl} alt="Preview" className={s.previewImage} />
-            <div className={s.fileName}>{selectedFile?.name}</div>
           </div>
         )}
 

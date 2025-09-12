@@ -44,9 +44,14 @@
 
 .actionButtons {
   display: flex;
-  gap: 0.75rem;
-  justify-content: flex-end;
+  justify-content: space-between;
+
   margin-top: 1rem;
+
+  > div {
+    display: flex;
+    gap: 0.75rem;
+  }
 }
 
 .actionButtons button {

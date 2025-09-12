@@ -1,3 +1,5 @@
+import ArrowRight from '@threekit-tools/treble/dist/icons/ArrowRight';
+import BackArrow from '../../../../assets/svg/BackArrow';
 import { BaseButton } from '../../../../ui/baseButton/BaseButton';
 import { BaseInput } from '../../../../ui/baseInput/BaseInput';
 interface BoothStepProps {
@@ -21,7 +23,9 @@ const BoothStep = ({
         <BaseInput label="Contacts" placeholder="Threekit" />
       </div>
       <div className={s.bottom_buttons}>
-        <BaseButton onClick={() => handleStepClick('event')}>Back</BaseButton>
+        <BaseButton variant="muted" onClick={() => handleStepClick('event')}>
+          <BackArrow /> Back
+        </BaseButton>
         <BaseButton
           onClick={() => {
             handleStepClick('company');

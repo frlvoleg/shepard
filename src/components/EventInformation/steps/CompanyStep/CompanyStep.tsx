@@ -2,6 +2,8 @@ import { useId, useState } from 'react';
 import { BaseButton } from '../../../../ui/baseButton/BaseButton';
 import { BoothCard, BoothOptionValue } from '../../boothCard/BoothCart';
 import s from './CompanyStep.module.scss';
+import ArrowRight from '../../../../assets/svg/ArrowRight';
+import BackArrow from '../../../../assets/svg/BackArrow';
 
 export interface BoothOption {
   id: BoothOptionValue;
@@ -61,9 +63,13 @@ const CompanyStep = ({
         </div>
       </div>
       <div className={s.bottom_buttons}>
-        <BaseButton onClick={() => handleStepClick('event')}>Back</BaseButton>
+        <BaseButton onClick={() => handleStepClick('event')}>
+          <BackArrow />
+          Back
+        </BaseButton>
         <BaseButton onClick={() => handleStepClick('company')}>
           Next step
+          <ArrowRight />
         </BaseButton>
       </div>
     </>

@@ -77,7 +77,8 @@ export const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
 
         let finalImageUrl = '';
         try {
-          const imageUrl = await ThreekitImageService.getImageFromAsset(assetId);
+          const imageUrl =
+            await ThreekitImageService.getImageFromAsset(assetId);
           if (imageUrl) {
             finalImageUrl = imageUrl;
           } else {
@@ -161,21 +162,24 @@ export const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
         )}
 
         <div className={s.actionButtons}>
-          <BaseButton
-            variant="muted"
-            onClick={handleClose}
-            disabled={uploading}
-          >
-            Cancel
-          </BaseButton>
+          <p>Upload image with aspect ratio to actual size (968 x 898 mm)</p>
+          <div>
+            <BaseButton
+              variant="muted"
+              onClick={handleClose}
+              disabled={uploading}
+            >
+              Cancel
+            </BaseButton>
 
-          <BaseButton
-            variant="primary"
-            onClick={handleUpload}
-            disabled={!selectedFile || uploading}
-          >
-            {uploading ? 'Uploading...' : 'Save Image'}
-          </BaseButton>
+            <BaseButton
+              variant="primary"
+              onClick={handleUpload}
+              disabled={!selectedFile || uploading}
+            >
+              {uploading ? 'Uploading...' : 'Save Image'}
+            </BaseButton>
+          </div>
         </div>
       </div>
     </Modal>

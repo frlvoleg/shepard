@@ -9,7 +9,8 @@ import {
   ThreekitConfigurationService,
   ThreekitImageService,
 } from '../../../services/threekitImageService';
-import { useAppSelector } from '../../../store/redux';
+import { useAppDispatch, useAppSelector } from '../../../store/redux';
+import { setConfigurationLoading } from '../../../store/slices/ui/uiSlice';
 
 export interface AttributeSection {
   id: string;
@@ -30,6 +31,7 @@ export const AttributeContent: React.FC<AttributeContentProps> = ({
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [showImageModal, setShowImageModal] = useState(false);
   const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(null);
+  const dispatch = useAppDispatch();
 
   // Get the uploaded image from Redux store
   const selectedConfig = useAppSelector(
@@ -79,6 +81,7 @@ export const AttributeContent: React.FC<AttributeContentProps> = ({
 
   const handleSaveConfiguration = async () => {
     setSaving(true);
+    dispatch(setConfigurationLoading(true));
 
     try {
       const result = await ThreekitConfigurationService.saveConfiguration();
@@ -91,6 +94,7 @@ export const AttributeContent: React.FC<AttributeContentProps> = ({
       console.log(error);
     } finally {
       setSaving(false);
+      dispatch(setConfigurationLoading(false));
     }
   };
 

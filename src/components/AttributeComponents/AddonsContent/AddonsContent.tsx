@@ -1,13 +1,19 @@
 import { useEffect, useState } from 'react';
-import { useAppSelector } from '../../../store/redux';
+import { useAppDispatch, useAppSelector } from '../../../store/redux';
 import { AttributeSection } from '../AttributeContent';
 import { ThreekitImageService } from '../../../services/threekitImageService';
 import { useThreekitImageUrl } from '../../../hooks/useThreekitImageUrl';
 import fallbackImg from '../../../assets/gray.jpg';
 import s from './AddonsContent.module.scss';
+import { setConfigurationLoading } from '../../../store/slices/ui/uiSlice';
 
 const AddonsContent = ({ section }: { section: AttributeSection }) => {
   const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(null);
+  const [addonName, setAddonName] = useState<string>('');
+  const isConfigurationLoading = useAppSelector(
+    (s) => s.ui.isConfigurationLoading
+  );
+  const dispatch = useAppDispatch();
 
   const selectedConfig = useAppSelector(
     (s) => s.configurator.selectedConfiguration
@@ -78,23 +84,36 @@ const AddonsContent = ({ section }: { section: AttributeSection }) => {
 
   useEffect(() => {
     const fetchMaterialData = async () => {
-      const res = await ThreekitImageService.getAssetData(currentAssetId);
+      if (!currentAssetId) return;
 
-      console.log(res);
-      return res;
+      dispatch(setConfigurationLoading(true));
+
+      try {
+        const res = await ThreekitImageService.getAssetData(currentAssetId);
+        console.log(res);
+        setAddonName(res.name);
+      } catch (error) {
+        console.error('Failed to fetch material data:', error);
+      } finally {
+        dispatch(setConfigurationLoading(false));
+      }
     };
 
     fetchMaterialData();
-  }, [currentAssetId]);
+  }, [currentAssetId, dispatch]);
 
   return (
     <div>
-      <div className={s.material_item}>
-        <div className={s.material_item__img}>
-          <img src={fallbackImg} alt="material image" />
+      {isConfigurationLoading ? (
+        <div>Loading...</div>
+      ) : (
+        <div className={s.material_item}>
+          <div className={s.material_item__img}>
+            <img src={fallbackImg} alt="material image" />
+          </div>
+          <div>{addonName}</div>
         </div>
-        <div>Gray</div>
-      </div>
+      )}
     </div>
   );
 };

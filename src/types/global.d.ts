@@ -18,6 +18,7 @@ declare module '@threekit-tools/treble' {
   export const usePlayerPortal: () => [any, any];
   export const useShare: () => any;
   export const useThreekitInitStatus: () => boolean;
+  export const usePlayerLoadingStatus: () => boolean;
   export const useAddToWishlist: () => any;
   export const useWishlist: () => any;
   export const useSnapshot: (...args: any[]) => any;

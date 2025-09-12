@@ -38,6 +38,7 @@ export const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [isDragActive, setIsDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const dispatch = useAppDispatch();
 
@@ -132,25 +133,77 @@ export const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
     fileInputRef.current?.click();
   };
 
+  const handleDragEnter = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragActive(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragActive(false);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragActive(false);
+
+    const files = e.dataTransfer.files;
+    if (files && files[0]) {
+      const file = files[0];
+      if (file.type.startsWith('image/')) {
+        setSelectedFile(file);
+        setPreviewUrl(URL.createObjectURL(file));
+      }
+    }
+  };
+
   return (
     <Modal show={show} title={title} handleClose={handleClose}>
       <div className={s.modalContent}>
         <div className={s.uploadSection}>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            onChange={handleFileSelect}
-            style={{ display: 'none' }}
-          />
-
-          <BaseButton
-            variant="primary"
+          <div
+            className={`${s.uploadBox} ${isDragActive ? s.dragActive : ''}`}
             onClick={triggerFileInput}
-            disabled={uploading}
+            onDragEnter={handleDragEnter}
+            onDragLeave={handleDragLeave}
+            onDragOver={handleDragOver}
+            onDrop={handleDrop}
+            style={{ opacity: uploading ? 0.6 : 1 }}
           >
-            {selectedFile ? 'Change Image' : 'Select Image'}
-          </BaseButton>
+            <div className={s.uploadInner}>
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M12 4v16m8-8H4"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <p className={s.uploadText}>
+                Drag & Drop files or <span className={s.browse}>browse</span>
+              </p>
+              <p className={s.uploadSubtext}>
+                Supported files: JPG, PNG, GIF, up to 10MB
+              </p>
+            </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleFileSelect}
+              className={s.hiddenInput}
+              disabled={uploading}
+            />
+          </div>
         </div>
 
         {previewUrl && (

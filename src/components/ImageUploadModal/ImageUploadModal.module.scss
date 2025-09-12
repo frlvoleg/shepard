@@ -8,6 +8,79 @@
 .uploadSection {
   display: flex;
   justify-content: center;
+
+  height: 100%;
+  margin: 0 auto;
+}
+
+.uploadBox {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 550px;
+  min-height: 200px;
+  padding: 20px;
+  border: 2px dashed #d3d7de;
+  background-color: #ffffff;
+  color: #6b7280;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+
+  &:hover {
+    border-color: #94a3b8;
+    background-color: #f5f7fa;
+  }
+
+  &.dragActive {
+    border-color: #3b82f6;
+    background-color: #f0f6ff;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.uploadInner {
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+
+  svg {
+    color: #9ca3af;
+  }
+}
+
+.uploadText {
+  font-size: 16px;
+  font-weight: 500;
+  color: #4b5563;
+  margin: 0;
+
+  .browse {
+    color: #3b82f6;
+    text-decoration: underline;
+  }
+}
+
+.uploadSubtext {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.hiddenInput {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
 }
 
 .previewSection {

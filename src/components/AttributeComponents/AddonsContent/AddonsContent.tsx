@@ -10,6 +10,7 @@ import { setConfigurationLoading } from '../../../store/slices/ui/uiSlice';
 const AddonsContent = ({ section }: { section: AttributeSection }) => {
   const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(null);
   const [addonName, setAddonName] = useState<string>('');
+  const [imageLoading, setImageLoading] = useState(false);
   const isConfigurationLoading = useAppSelector(
     (s) => s.ui.isConfigurationLoading
   );
@@ -60,6 +61,7 @@ const AddonsContent = ({ section }: { section: AttributeSection }) => {
   useEffect(() => {
     const fetchImageUrl = async () => {
       if (currentAssetId) {
+        setImageLoading(true);
         try {
           console.log('Fetching thumbnail for assetId:', currentAssetId);
           const imageUrl =
@@ -75,6 +77,8 @@ const AddonsContent = ({ section }: { section: AttributeSection }) => {
           }
         } catch (error) {
           setCurrentImageUrl(null);
+        } finally {
+          setImageLoading(false);
         }
       }
     };
@@ -104,16 +108,16 @@ const AddonsContent = ({ section }: { section: AttributeSection }) => {
 
   return (
     <div>
-      {isConfigurationLoading ? (
-        <div>Loading...</div>
-      ) : (
-        <div className={s.material_item}>
-          <div className={s.material_item__img}>
-            <img src={fallbackImg} alt="material image" />
-          </div>
-          <div>{addonName}</div>
+      <div className={s.material_item}>
+        <div className={s.material_item__img}>
+          {imageLoading ? (
+            <div className={s.imageSpinner} />
+          ) : (
+            <img src={currentImageUrl || fallbackImg} alt="material image" />
+          )}
         </div>
-      )}
+        <div>{addonName}</div>
+      </div>
     </div>
   );
 };

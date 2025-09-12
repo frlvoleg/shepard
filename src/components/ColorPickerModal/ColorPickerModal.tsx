@@ -60,11 +60,55 @@ export const ColorPickerModal: React.FC<ColorPickerModalProps> = ({
     };
     return rgbToHex(rgb255);
   });
+  const [lastColors, setLastColors] = useState<ColorValue[]>(() => {
+    // Load from localStorage
+    const saved = localStorage.getItem('lastColors');
+    const savedColors = saved ? JSON.parse(saved) : [];
+    
+    // If there's a current color, make sure it's first in the list
+    if (currentColor) {
+      const filtered = savedColors.filter((c: ColorValue) => 
+        !(c.r === currentColor.r && c.g === currentColor.g && c.b === currentColor.b)
+      );
+      return [currentColor, ...filtered].slice(0, 12);
+    }
+    
+    return savedColors.slice(0, 12);
+  });
 
   const selectedConfig = useAppSelector(
     (s) => s.configurator.selectedConfiguration
   );
   const dispatch = useAppDispatch();
+
+  // Save a color to lastColors list
+  const saveColorToHistory = (color: ColorValue) => {
+    setLastColors(prev => {
+      const newColors = [color, ...prev.filter(c => 
+        !(c.r === color.r && c.g === color.g && c.b === color.b)
+      )].slice(0, 12); // Keep only 12 colors
+      
+      // Save to localStorage
+      localStorage.setItem('lastColors', JSON.stringify(newColors));
+      return newColors;
+    });
+  };
+
+  // Handle clicking on a color from history
+  const handleColorFromHistory = (color: ColorValue) => {
+    setSelectedColor(color);
+    const rgb255 = {
+      r: Math.round(color.r * 255),
+      g: Math.round(color.g * 255),
+      b: Math.round(color.b * 255),
+    };
+    setRgbInputs({
+      r: String(rgb255.r),
+      g: String(rgb255.g),
+      b: String(rgb255.b),
+    });
+    setHexInput(rgbToHex(rgb255));
+  };
 
   console.log('selectedConfig');
   console.log(selectedConfig);
@@ -170,6 +214,9 @@ export const ColorPickerModal: React.FC<ColorPickerModalProps> = ({
         })
       );
 
+      // Save color to history
+      saveColorToHistory(selectedColor);
+      
       onColorChanged(selectedColor);
       onUnsavedChanges(true);
       handleClose();
@@ -209,18 +256,22 @@ export const ColorPickerModal: React.FC<ColorPickerModalProps> = ({
             <div>
               <label className={s.label}>Last Colors</label>
               <div className={s.grid}>
-                <div className={s.grid_item}></div>
-                <div className={s.grid_item}></div>
-                <div className={s.grid_item}></div>
-                <div className={s.grid_item}></div>
-                <div className={s.grid_item}></div>
-                <div className={s.grid_item}></div>
-                <div className={s.grid_item}></div>
-                <div className={s.grid_item}></div>
-                <div className={s.grid_item}></div>
-                <div className={s.grid_item}></div>
-                <div className={s.grid_item}></div>
-                <div className={s.grid_item}></div>
+                {Array.from({ length: 12 }).map((_, index) => {
+                  const color = lastColors[index];
+                  return (
+                    <div 
+                      key={index}
+                      className={s.grid_item}
+                      onClick={() => color && handleColorFromHistory(color)}
+                      style={{
+                        backgroundColor: color ? 
+                          `rgb(${Math.round(color.r * 255)}, ${Math.round(color.g * 255)}, ${Math.round(color.b * 255)})` : 
+                          '#f5f5f5',
+                        cursor: color ? 'pointer' : 'default'
+                      }}
+                    />
+                  );
+                })}
               </div>
             </div>
           </div>

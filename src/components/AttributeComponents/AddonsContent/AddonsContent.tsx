@@ -93,7 +93,7 @@ const AddonsContent = ({ section }: { section: AttributeSection }) => {
         <div className={s.material_item__img}>
           <img src={fallbackImg} alt="material image" />
         </div>
-        <div>title</div>
+        <div>Gray</div>
       </div>
     </div>
   );

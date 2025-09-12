@@ -160,8 +160,6 @@ export const ColorPickerModal: React.FC<ColorPickerModalProps> = ({
       );
 
       console.log('action');
-      console.log('action');
-      console.log('action');
       console.log(act);
 
       // Update Redux state with the color value directly

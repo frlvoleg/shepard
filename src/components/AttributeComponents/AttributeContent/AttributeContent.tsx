@@ -146,6 +146,29 @@ export const AttributeContent: React.FC<AttributeContentProps> = ({
           </div>
         )}
 
+        {/* Show current color if available */}
+        {currentColor && (
+          <div className={s.currentColor}>
+            <div className={s.colorPreview}>
+              <div
+                className={s.colorPreviewBox}
+                style={{
+                  backgroundColor: `rgb(${Math.round(currentColor.r * 255)}, ${Math.round(currentColor.g * 255)}, ${Math.round(currentColor.b * 255)})`,
+                }}
+              />
+              <div className={s.colorHex}>
+                {`#${Math.round(currentColor.r * 255)
+                  .toString(16)
+                  .padStart(2, '0')}${Math.round(currentColor.g * 255)
+                  .toString(16)
+                  .padStart(2, '0')}${Math.round(currentColor.b * 255)
+                  .toString(16)
+                  .padStart(2, '0')}`.toUpperCase()}
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className={s.buttonRow}>
           {section.showColorButton && (
             <BaseButton variant="muted" onClick={() => setShowColorModal(true)}>

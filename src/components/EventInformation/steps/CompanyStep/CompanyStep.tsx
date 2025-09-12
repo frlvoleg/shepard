@@ -63,7 +63,7 @@ const CompanyStep = ({
         </div>
       </div>
       <div className={s.bottom_buttons}>
-        <BaseButton onClick={() => handleStepClick('event')}>
+        <BaseButton variant="muted" onClick={() => handleStepClick('event')}>
           <BackArrow />
           Back
         </BaseButton>

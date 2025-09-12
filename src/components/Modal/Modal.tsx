@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom';
-import { RemoveIcon } from '@threekit-tools/treble';
 import { ModalProps } from '../../types';
 import s from './Modal.module.scss';
+import RemoveIcon from '../../assets/svg/RemoveIcon';
 
 function ModalComponent(props: ModalProps) {
   const { title, children, handleClose } = props;
@@ -10,7 +10,7 @@ function ModalComponent(props: ModalProps) {
       onClick={(e) => e.stopPropagation()}
       className={s.modalComponent_popup__inner}
     >
-      <div>
+      <div className={s.modal_header_top}>
         <h2>{title}</h2>
         <div onClick={handleClose} className="float-right cursor-pointer">
           <RemoveIcon />

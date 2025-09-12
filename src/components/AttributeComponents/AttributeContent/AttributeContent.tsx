@@ -223,17 +223,6 @@ export const AttributeContent: React.FC<AttributeContentProps> = ({
           )}
         </div>
 
-        <div className={s.logoSection}>
-          <div className={s.logoLabel}>Logo</div>
-          <div className={s.buttonRow}>
-            <BaseButton
-              variant="primary"
-              onClick={() => setShowImageModal(true)}
-            >
-              Set Logo
-            </BaseButton>
-          </div>
-        </div>
       </div>
 
       {/* Image Upload Modal */}

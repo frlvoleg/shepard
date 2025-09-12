@@ -105,15 +105,25 @@ export default function ColorPicker({
   }, [hueRgb, width, height]);
 
   const setSVFromEvent = (e: React.MouseEvent | React.TouchEvent) => {
-    const rect = svRef.current!.getBoundingClientRect();
+    const canvas = svRef.current;
+    if (!canvas) return;
+    
+    const rect = canvas.getBoundingClientRect();
     const clientX = 'touches' in e ? e.touches[0].clientX : (e as any).clientX;
     const clientY = 'touches' in e ? e.touches[0].clientY : (e as any).clientY;
+    
+    // Calculate position relative to canvas
     let x = clientX - rect.left;
     let y = clientY - rect.top;
+    
+    // Clamp to canvas bounds
     x = Math.max(0, Math.min(rect.width, x));
     y = Math.max(0, Math.min(rect.height, y));
+    
+    // Convert to saturation and value (0-1 range)
     const s = x / rect.width;
     const v = 1 - y / rect.height;
+    
     const next = { ...hsv, s, v };
     setHsv(next);
     onChange(hsvToRgb(next));
@@ -150,8 +160,13 @@ export default function ColorPicker({
   };
 
   // позиція курсора в SV
-  const svX = Math.round(hsv.s * width);
-  const svY = Math.round((1 - hsv.v) * height);
+  const canvas = svRef.current;
+  const rect = canvas?.getBoundingClientRect();
+  const actualWidth = rect?.width || width;
+  const actualHeight = rect?.height || height;
+  
+  const svX = Math.round(hsv.s * actualWidth);
+  const svY = Math.round((1 - hsv.v) * actualHeight);
 
   return (
     <div className={`${s['cmp-color-picker']} ${className ?? ''}`}>

@@ -19,6 +19,7 @@ export interface ModalProps {
   children: ReactNode;
   handleClose: () => void;
   show?: boolean;
+  className?: ReactNode;
 }
 
 export interface AccordionItemProps {

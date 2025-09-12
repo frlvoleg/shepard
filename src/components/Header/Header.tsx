@@ -120,6 +120,7 @@ const Header = () => {
         show={showModal}
         title={modalContent?.title || ''}
         handleClose={closeModal}
+        className=""
       >
         {modalContent?.content}
       </Modal>

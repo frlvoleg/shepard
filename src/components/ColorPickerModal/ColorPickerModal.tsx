@@ -186,7 +186,12 @@ export const ColorPickerModal: React.FC<ColorPickerModalProps> = ({
   };
 
   return (
-    <Modal show={show} title={title} handleClose={handleClose}>
+    <Modal
+      show={show}
+      title={title}
+      handleClose={handleClose}
+      className={s.colorPicker_modal}
+    >
       <div className={s.modalContent}>
         {/* RGB Inputs */}
         <div className={s.preview_colors}>
@@ -202,6 +207,23 @@ export const ColorPickerModal: React.FC<ColorPickerModalProps> = ({
                 placeholder="#FF0000"
                 style={{ textAlign: 'center', fontFamily: 'monospace' }}
               />
+            </div>
+            <div>
+              <label className={s.label}>Last Colors</label>
+              <div className={s.grid}>
+                <div className={s.grid_item}></div>
+                <div className={s.grid_item}></div>
+                <div className={s.grid_item}></div>
+                <div className={s.grid_item}></div>
+                <div className={s.grid_item}></div>
+                <div className={s.grid_item}></div>
+                <div className={s.grid_item}></div>
+                <div className={s.grid_item}></div>
+                <div className={s.grid_item}></div>
+                <div className={s.grid_item}></div>
+                <div className={s.grid_item}></div>
+                <div className={s.grid_item}></div>
+              </div>
             </div>
           </div>
 

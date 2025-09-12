@@ -22,10 +22,10 @@ function ModalComponent(props: ModalProps) {
 }
 
 export default function Modal(props: ModalProps) {
-  const { title, children, handleClose, show } = props;
+  const { title, children, handleClose, show, className } = props;
   if (!show) return null;
   return ReactDOM.createPortal(
-    <div onClick={handleClose} className={s.modal_popup}>
+    <div onClick={handleClose} className={`${s.modal_popup} ${className}`}>
       <div className={s.modal_popup__inner}>
         <ModalComponent title={title} handleClose={handleClose}>
           {children}

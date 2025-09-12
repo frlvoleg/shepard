@@ -16,6 +16,8 @@ import {
 } from '../../../services/threekitImageService';
 import { useAppDispatch, useAppSelector } from '../../../store/redux';
 import { setConfigurationLoading } from '../../../store/slices/ui/uiSlice';
+import EditIcon from '../../../assets/svg/EditIcon';
+import DeleteIcon from '../../../assets/svg/DeleteIcon';
 
 export interface AttributeSection {
   id: string;
@@ -170,18 +172,67 @@ export const AttributeContent: React.FC<AttributeContentProps> = ({
         )}
 
         <div className={s.buttonRow}>
-          {section.showColorButton && (
-            <BaseButton variant="muted" onClick={() => setShowColorModal(true)}>
-              {currentColor ? 'Change Color' : 'Set Color'}
-            </BaseButton>
+          {currentColor || currentImageUrl ? (
+            <>
+              <BaseButton
+                variant="edit"
+                onClick={() => {
+                  if (currentColor) setShowColorModal(true);
+                  if (currentImageUrl) setShowImageModal(true);
+                }}
+              >
+                Edit
+                <EditIcon />
+              </BaseButton>
+              <BaseButton
+                variant="delete"
+                onClick={() => {
+                  // Handle delete functionality
+                  if (currentColor) {
+                    // Clear color logic here
+                    setCurrentColor(null);
+                  }
+                  if (currentImageUrl) {
+                    // Clear image logic here
+                    setCurrentImageUrl(null);
+                  }
+                }}
+              >
+                Delete
+                <DeleteIcon />
+              </BaseButton>
+            </>
+          ) : (
+            <>
+              {section.showColorButton && (
+                <BaseButton
+                  variant="muted"
+                  onClick={() => setShowColorModal(true)}
+                >
+                  Set Color
+                </BaseButton>
+              )}
+              <BaseButton
+                variant="primary"
+                onClick={() => setShowImageModal(true)}
+                block={!section.showColorButton}
+              >
+                Set Image
+              </BaseButton>
+            </>
           )}
-          <BaseButton
-            variant="primary"
-            onClick={() => setShowImageModal(true)}
-            block={!section.showColorButton}
-          >
-            {currentImageUrl ? 'Change Image' : 'Set Image'}
-          </BaseButton>
+        </div>
+
+        <div className={s.logoSection}>
+          <div className={s.logoLabel}>Logo</div>
+          <div className={s.buttonRow}>
+            <BaseButton
+              variant="primary"
+              onClick={() => setShowImageModal(true)}
+            >
+              Set Logo
+            </BaseButton>
+          </div>
         </div>
       </div>
 

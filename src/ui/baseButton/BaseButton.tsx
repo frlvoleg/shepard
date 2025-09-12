@@ -1,7 +1,7 @@
 import s from './BaseButton.module.scss';
 
 export const BaseButton: React.FC<{
-  variant?: 'primary' | 'muted';
+  variant?: 'primary' | 'muted' | 'edit' | 'delete';
   block?: boolean;
   children: React.ReactNode;
   onClick?: () => void;

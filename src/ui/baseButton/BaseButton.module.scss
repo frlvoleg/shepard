@@ -37,6 +37,28 @@
   background: #e2e8f0;
 }
 
+.btn.edit {
+  background: #ffffff;
+  color: #1e293b;
+  border: 2px solid #3b82f6;
+}
+
+.btn.edit:hover {
+  background: #e2e8f0;
+  border-color: #2563eb;
+}
+
+.btn.delete {
+  background: #ffffff;
+  color: #1e293b;
+  border: 2px solid #ef4444;
+}
+
+.btn.delete:hover {
+  background: #e2e8f0;
+  border-color: #dc2626;
+}
+
 .btn.block {
   width: 100%;
 }

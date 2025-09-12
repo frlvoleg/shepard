@@ -43,13 +43,43 @@ export const AttributeContent: React.FC<AttributeContentProps> = ({
   const [currentColor, setCurrentColor] = useState<ColorValue | null>(null);
   const dispatch = useAppDispatch();
 
+  const getColorAttributeName = (attributeName: string) => {
+    // Map image attribute names to their corresponding color attribute names
+    const colorMap: Record<string, string> = {
+      'CustomArea_A1': 'Set_Color_A1',
+      'CustomArea_B1': 'Set_Color_B1',
+      'CustomArea_B2': 'Set_Color_B2',
+      'CustomArea_C1': 'Set_Color_C1',
+      'CustomArea_C2': 'Set_Color_C2',
+      'CustomArea_D1': 'Set_Color_D1',
+      'CustomArea_D2': 'Set_Color_D2',
+    };
+    return colorMap[attributeName] || 'Set_Color'; // fallback to global color
+  };
+
   // Get the uploaded image from Redux store
   const selectedConfig = useAppSelector(
     (s) => s.configurator.selectedConfiguration
   );
 
-  // Get the current attribute value
+  // Get the current attribute value (for images)
   const currentAttribute = selectedConfig?.[section.attributeName];
+  
+  // Get the corresponding color attribute
+  const colorAttributeName = getColorAttributeName(section.attributeName);
+  const currentColorAttribute = selectedConfig?.[colorAttributeName];
+  
+  // Check if global color has been set
+  const globalColor = selectedConfig?.['Set_Color'];
+  const hasGlobalColorSet = globalColor && 
+    typeof globalColor === 'object' && 
+    'r' in globalColor && 
+    'g' in globalColor && 
+    'b' in globalColor &&
+    !(globalColor.r === 1 && globalColor.g === 1 && globalColor.b === 1); // Not default white
+  
+  // Debug logging
+  console.log('Section:', section.title, 'Global Color:', globalColor, 'Has Global Color Set:', hasGlobalColorSet);
 
   const currentAssetId =
     currentAttribute &&
@@ -58,13 +88,18 @@ export const AttributeContent: React.FC<AttributeContentProps> = ({
       ? currentAttribute.assetId
       : null;
 
-  // Check if current attribute is a color value
+  // Check if current color attribute has a color value
+  // For global color section, always show color (including default)
+  // For other sections, only show color if it's not the default white or if global color was changed
   const isColorAttribute =
-    currentAttribute &&
-    typeof currentAttribute === 'object' &&
-    'r' in currentAttribute &&
-    'g' in currentAttribute &&
-    'b' in currentAttribute;
+    currentColorAttribute &&
+    typeof currentColorAttribute === 'object' &&
+    'r' in currentColorAttribute &&
+    'g' in currentColorAttribute &&
+    'b' in currentColorAttribute &&
+    (section.id === 'global-color' || 
+     hasGlobalColorSet ||
+     !(currentColorAttribute.r === 1 && currentColorAttribute.g === 1 && currentColorAttribute.b === 1));
 
   // Fetch image URL when asset ID is available
   useEffect(() => {
@@ -88,22 +123,24 @@ export const AttributeContent: React.FC<AttributeContentProps> = ({
     fetchImageUrl();
   }, [currentAssetId]);
 
-  // Update current color when attribute changes
+  // Update current color when color attribute changes
   useEffect(() => {
     if (isColorAttribute) {
-      setCurrentColor(currentAttribute as ColorValue);
+      setCurrentColor(currentColorAttribute as ColorValue);
     } else {
       setCurrentColor(null);
     }
-  }, [currentAttribute, isColorAttribute]);
+  }, [currentColorAttribute, isColorAttribute]);
 
   const imageConfig: ImageUploadConfig = {
     attributeName: section.attributeName,
     imageType: section.imageType,
   };
 
+
+
   const colorConfig: ColorPickerConfig = {
-    attributeName: 'Set_Color',
+    attributeName: getColorAttributeName(section.attributeName),
   };
 
   const handleImageUploaded = (imageUrl: string) => {
@@ -191,18 +228,18 @@ export const AttributeContent: React.FC<AttributeContentProps> = ({
                   // Handle delete functionality
                   if (currentColor) {
                     const defaultColor = { r: 1, g: 1, b: 1 };
+                    const colorAttrName = getColorAttributeName(section.attributeName);
 
                     // Update Threekit configurator.
                     if (window.threekit?.configurator?.setConfiguration) {
                       await window.threekit.configurator.setConfiguration({
-                        [section.attributeName]: defaultColor,
+                        [colorAttrName]: defaultColor,
                       });
                     }
 
-                    // Update Redux state
                     dispatch(
                       updateSelectedValue({
-                        name: section.attributeName,
+                        name: colorAttrName,
                         value: defaultColor as any,
                       })
                     );
@@ -219,8 +256,16 @@ export const AttributeContent: React.FC<AttributeContentProps> = ({
                       });
                     }
 
+                    dispatch(
+                      updateSelectedValue({
+                        name: section.attributeName,
+                        value: defaultImg as any,
+                      })
+                    );
+
                     // Clear image logic here
                     setCurrentImageUrl(null);
+                    setHasUnsavedChanges(true);
                   }
                 }}
               >
@@ -230,18 +275,34 @@ export const AttributeContent: React.FC<AttributeContentProps> = ({
             </>
           ) : (
             <>
-              {section.showColorButton && (
+              {section.showColorButton && 
+                (section.id === 'global-color' || hasGlobalColorSet) && (
                 <BaseButton
                   variant="muted"
-                  onClick={
-                    section.id === 'global-color'
-                      ? () => setShowColorModal(true)
-                      : undefined
-                  }
+                  onClick={() => {
+                    if (section.id === 'global-color') {
+                      // Global color modal - uses 'Set_Color'
+                      setShowColorModal(true);
+                    } else {
+                      // Specific section color modal - uses 'Set_Color_XX'
+                      setShowColorModal(true);
+                    }
+                  }}
                 >
                   Set Color
                 </BaseButton>
               )}
+              {section.showColorButton &&
+                (section.id !== 'global-color') && (
+                  <BaseButton
+                    variant="muted"
+                    onClick={() => {
+                      setShowColorModal(true);
+                    }}
+                  >
+                    Set Color
+                  </BaseButton>
+                )}
               <BaseButton
                 variant="primary"
                 onClick={() => setShowImageModal(true)}

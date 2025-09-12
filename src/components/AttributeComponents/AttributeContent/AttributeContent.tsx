@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BaseButton } from '../../../ui/baseButton/BaseButton';
 import s from './AttributeContent.module.scss';
 import {
@@ -16,6 +16,7 @@ import {
 } from '../../../services/threekitImageService';
 import { useAppDispatch, useAppSelector } from '../../../store/redux';
 import { setConfigurationLoading } from '../../../store/slices/ui/uiSlice';
+import { updateSelectedValue } from '../../../store/slices/configurator/configuratorSlice';
 import EditIcon from '../../../assets/svg/EditIcon';
 import DeleteIcon from '../../../assets/svg/DeleteIcon';
 
@@ -186,11 +187,26 @@ export const AttributeContent: React.FC<AttributeContentProps> = ({
               </BaseButton>
               <BaseButton
                 variant="delete"
-                onClick={() => {
+                onClick={async () => {
                   // Handle delete functionality
                   if (currentColor) {
-                    // Clear color logic here
-                    setCurrentColor(null);
+                    const defaultColor = { r: 1, g: 1, b: 1 };
+                    
+                    // Update Threekit configurator.
+                    if (window.threekit?.configurator?.setConfiguration) {
+                      await window.threekit.configurator.setConfiguration({
+                        [section.attributeName]: defaultColor,
+                      });
+                    }
+                    
+                    // Update Redux state
+                    dispatch(updateSelectedValue({
+                      name: section.attributeName,
+                      value: defaultColor as any,
+                    }));
+                    
+                    setCurrentColor(defaultColor);
+                    setHasUnsavedChanges(true);
                   }
                   if (currentImageUrl) {
                     // Clear image logic here
@@ -207,7 +223,7 @@ export const AttributeContent: React.FC<AttributeContentProps> = ({
               {section.showColorButton && (
                 <BaseButton
                   variant="muted"
-                  onClick={() => setShowColorModal(true)}
+                  onClick={section.id === 'global-color' ? () => setShowColorModal(true) : undefined}
                 >
                   Set Color
                 </BaseButton>

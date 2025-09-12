@@ -56,6 +56,13 @@ const brandingSections: AttributeSection[] = [
     imageType: 'background',
     showColorButton: true,
   },
+  {
+    id: 'global-color',
+    title: 'Set Color',
+    attributeName: 'Set_Color',
+    imageType: 'background',
+    showColorButton: true,
+  },
 ];
 
 const addonsSections: AttributeSection[] = [
@@ -163,7 +170,7 @@ export default function ConfiguratorAccordion({
       case 'cart':
         return ['S1'];
       default:
-        return ['A1', 'B1', 'B2', 'C1', 'C2', 'D1', 'D2'];
+        return ['A1', 'B1', 'B2', 'C1', 'C2', 'D1', 'D2', 'SC'];
     }
   };
 

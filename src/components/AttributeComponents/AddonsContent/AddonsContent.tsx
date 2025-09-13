@@ -7,6 +7,19 @@ import fallbackImg from '../../../assets/gray.jpg';
 import s from './AddonsContent.module.scss';
 import { setConfigurationLoading } from '../../../store/slices/ui/uiSlice';
 
+interface CarpetValue {
+  assetId: string;
+  enabled: boolean;
+  fileSize: number;
+  label: string;
+  metadata: Record<string, any>;
+  name: string;
+  tagids: string[];
+  tags: string[];
+  type: string;
+  visible: boolean;
+}
+
 const AddonsContent = ({ section }: { section: AttributeSection }) => {
   const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(null);
   const [addonName, setAddonName] = useState<string>('');
@@ -20,9 +33,14 @@ const AddonsContent = ({ section }: { section: AttributeSection }) => {
     (s) => s.configurator.selectedConfiguration
   );
 
+  // Get Carpet values from attributes
+  const carpetValues = useAppSelector(
+    (s) => s.configurator.attributes.find((attr: any) => attr.name === 'Carpet')?.values || []
+  ) as CarpetValue[];
+
   const currentAttribute = selectedConfig?.[section.attributeName];
 
-  console.log(currentAttribute);
+  console.log('Carpet Values:', carpetValues);
 
   const currentAssetId =
     currentAttribute &&
@@ -104,20 +122,28 @@ const AddonsContent = ({ section }: { section: AttributeSection }) => {
     };
 
     fetchMaterialData();
+
+    console.log("currentAttribute");
+    console.log(currentAttribute);
+
   }, [currentAssetId, dispatch]);
 
   return (
     <div>
-      <div className={s.material_item}>
-        <div className={s.material_item__img}>
-          {imageLoading ? (
-            <div className={s.imageSpinner} />
-          ) : (
-            <img src={currentImageUrl || fallbackImg} alt="material image" />
-          )}
-        </div>
-        <div>{addonName}</div>
-      </div>
+      {carpetValues.map((carpetValue: CarpetValue) => {
+        return (
+          <div key={carpetValue.assetId} className={s.material_item}>
+            <div className={s.material_item__img}>
+              {imageLoading ? (
+                <div className={s.imageSpinner} />
+              ) : (
+                <img src={currentImageUrl || fallbackImg} alt="material image" />
+              )}
+            </div>
+            <div>{carpetValue.name}</div>
+          </div>
+        )
+      })}
     </div>
   );
 };

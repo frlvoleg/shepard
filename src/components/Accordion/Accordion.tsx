@@ -200,7 +200,7 @@ export default function ConfiguratorAccordion({
 
   // Handle toggling accordion items
   const handleToggle = (itemId: string) => {
-    setOpenItemId(prevId => prevId === itemId ? null : itemId);
+    setOpenItemId((prevId) => (prevId === itemId ? null : itemId));
   };
 
   return (

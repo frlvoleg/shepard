@@ -1,4 +1,5 @@
 .material_item {
+  position: relative;
   cursor: pointer;
   padding: 20px;
   max-width: 196px;
@@ -32,8 +33,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .parent {
@@ -42,4 +47,10 @@
   grid-template-rows: 1fr;
   grid-column-gap: 40px;
   grid-row-gap: 0px;
+}
+
+.completed_icon_overlay {
+  position: absolute;
+  top: 5%;
+  right: 5%;
 }

@@ -9,6 +9,7 @@ import peackImg from '../../../assets/peackokc.png';
 import s from './AddonsContent.module.scss';
 import { setConfigurationLoading } from '../../../store/slices/ui/uiSlice';
 import { updateSelectedValue } from '../../../store/slices/configurator/configuratorSlice';
+import CompletedIcon from '../../../assets/svg/CompletedIcon';
 
 interface CarpetValue {
   assetId: string;
@@ -26,21 +27,21 @@ interface CarpetValue {
 const fallbackImage = [
   {
     name: 'No Carpet',
-    img: fallbackImg
+    img: fallbackImg,
   },
   {
     name: 'Peacock',
-    img: peackImg
+    img: peackImg,
   },
   {
     name: 'Grey',
-    img: fallbackImg
+    img: fallbackImg,
   },
   {
     name: 'Burgundi',
-    img: burgandyImg
+    img: burgandyImg,
   },
-]
+];
 
 const AddonsContent = ({ section }: { section: AttributeSection }) => {
   const [carpetImages, setCarpetImages] = useState<Record<string, string>>({});
@@ -56,21 +57,24 @@ const AddonsContent = ({ section }: { section: AttributeSection }) => {
 
   // Get Carpet values from attributes
   const carpetValues = useAppSelector(
-    (s) => s.configurator.attributes.find((attr: any) => attr.name === 'Carpet')?.values || []
+    (s) =>
+      s.configurator.attributes.find((attr: any) => attr.name === 'Carpet')
+        ?.values || []
   ) as CarpetValue[];
 
   const currentAttribute = selectedConfig?.[section.attributeName];
 
   console.log('Carpet Values:', carpetValues);
   console.log('Current Attribute:', currentAttribute);
-  
+
   // Filter carpets based on selected value
-  const selectedCarpetId = currentAttribute && 
-    typeof currentAttribute === 'object' && 
-    'assetId' in currentAttribute 
-      ? currentAttribute.assetId 
+  const selectedCarpetId =
+    currentAttribute &&
+    typeof currentAttribute === 'object' &&
+    'assetId' in currentAttribute
+      ? currentAttribute.assetId
       : null;
-  
+
   // Show all carpets, but highlight the selected one
   const filteredCarpetValues = carpetValues;
 
@@ -87,7 +91,7 @@ const AddonsContent = ({ section }: { section: AttributeSection }) => {
   const handleCarpetSelect = async (carpetValue: CarpetValue) => {
     const newCarpetValue = {
       assetId: carpetValue.assetId,
-      type: carpetValue.type
+      type: carpetValue.type,
     };
 
     try {
@@ -99,10 +103,12 @@ const AddonsContent = ({ section }: { section: AttributeSection }) => {
       }
 
       // Update Redux state
-      dispatch(updateSelectedValue({
-        name: section.attributeName,
-        value: newCarpetValue as any,
-      }));
+      dispatch(
+        updateSelectedValue({
+          name: section.attributeName,
+          value: newCarpetValue as any,
+        })
+      );
 
       console.log('Selected carpet:', carpetValue.name, newCarpetValue);
     } catch (error) {
@@ -139,29 +145,38 @@ const AddonsContent = ({ section }: { section: AttributeSection }) => {
   useEffect(() => {
     const fetchCarpetImages = async () => {
       if (carpetValues.length === 0) return;
-      
+
       const imagePromises = carpetValues.map(async (carpetValue) => {
         try {
           console.log('Fetching thumbnail for assetId:', carpetValue.assetId);
-          const imageUrl = await ThreekitImageService.getAssetThumbnail(carpetValue.assetId);
-          
+          const imageUrl = await ThreekitImageService.getAssetThumbnail(
+            carpetValue.assetId
+          );
+
           if (imageUrl && imageUrl.trim() !== '') {
             return { assetId: carpetValue.assetId, imageUrl };
           }
           return { assetId: carpetValue.assetId, imageUrl: '' };
         } catch (error) {
-          console.error('Failed to fetch image for:', carpetValue.assetId, error);
+          console.error(
+            'Failed to fetch image for:',
+            carpetValue.assetId,
+            error
+          );
           return { assetId: carpetValue.assetId, imageUrl: '' };
         }
       });
 
       try {
         const results = await Promise.all(imagePromises);
-        const imageMap = results.reduce((acc, result) => {
-          acc[result.assetId] = result.imageUrl;
-          return acc;
-        }, {} as Record<string, string>);
-        
+        const imageMap = results.reduce(
+          (acc, result) => {
+            acc[result.assetId] = result.imageUrl;
+            return acc;
+          },
+          {} as Record<string, string>
+        );
+
         setCarpetImages(imageMap);
       } catch (error) {
         console.error('Failed to fetch carpet images:', error);
@@ -190,9 +205,8 @@ const AddonsContent = ({ section }: { section: AttributeSection }) => {
 
     fetchMaterialData();
 
-    console.log("currentAttribute");
+    console.log('currentAttribute');
     console.log(currentAttribute);
-
   }, [currentAssetId, dispatch]);
 
   return (
@@ -200,18 +214,18 @@ const AddonsContent = ({ section }: { section: AttributeSection }) => {
       {filteredCarpetValues.map((carpetValue: CarpetValue) => {
         const carpetImageUrl = carpetImages[carpetValue.assetId];
         const isSelected = selectedCarpetId === carpetValue.assetId;
-        
+
         // Find matching fallback image by name
         const fallbackImageData = fallbackImage.find(
-          fallback => fallback.name === carpetValue.name
+          (fallback) => fallback.name === carpetValue.name
         );
         const fallbackSrc = fallbackImageData?.img || fallbackImg;
-        
+
         // Filter out 'No Carpet' items
         if (carpetValue.name === 'No Carpet') {
           return null;
         }
-        
+
         return (
           <div
             key={carpetValue.assetId}
@@ -224,6 +238,11 @@ const AddonsContent = ({ section }: { section: AttributeSection }) => {
                 src={carpetImageUrl || fallbackSrc}
                 alt={`${carpetValue.name} carpet`}
               />
+              {isSelected && (
+                <div className={s.completed_icon_overlay}>
+                  <CompletedIcon />
+                </div>
+              )}
             </div>
             <div>{carpetValue.name}</div>
           </div>

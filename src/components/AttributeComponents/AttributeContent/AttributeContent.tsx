@@ -46,13 +46,13 @@ export const AttributeContent: React.FC<AttributeContentProps> = ({
   const getColorAttributeName = (attributeName: string) => {
     // Map image attribute names to their corresponding color attribute names
     const colorMap: Record<string, string> = {
-      'CustomArea_A1': 'Set_Color_A1',
-      'CustomArea_B1': 'Set_Color_B1',
-      'CustomArea_B2': 'Set_Color_B2',
-      'CustomArea_C1': 'Set_Color_C1',
-      'CustomArea_C2': 'Set_Color_C2',
-      'CustomArea_D1': 'Set_Color_D1',
-      'CustomArea_D2': 'Set_Color_D2',
+      CustomArea_A1: 'Set_Color_A1',
+      CustomArea_B1: 'Set_Color_B1',
+      CustomArea_B2: 'Set_Color_B2',
+      CustomArea_C1: 'Set_Color_C1',
+      CustomArea_C2: 'Set_Color_C2',
+      CustomArea_D1: 'Set_Color_D1',
+      CustomArea_D2: 'Set_Color_D2',
     };
     return colorMap[attributeName] || 'Set_Color'; // fallback to global color
   };
@@ -64,22 +64,30 @@ export const AttributeContent: React.FC<AttributeContentProps> = ({
 
   // Get the current attribute value (for images)
   const currentAttribute = selectedConfig?.[section.attributeName];
-  
+
   // Get the corresponding color attribute
   const colorAttributeName = getColorAttributeName(section.attributeName);
   const currentColorAttribute = selectedConfig?.[colorAttributeName];
-  
+
   // Check if global color has been set
   const globalColor = selectedConfig?.['Set_Color'];
-  const hasGlobalColorSet = globalColor && 
-    typeof globalColor === 'object' && 
-    'r' in globalColor && 
-    'g' in globalColor && 
+  const hasGlobalColorSet =
+    globalColor &&
+    typeof globalColor === 'object' &&
+    'r' in globalColor &&
+    'g' in globalColor &&
     'b' in globalColor &&
     !(globalColor.r === 1 && globalColor.g === 1 && globalColor.b === 1); // Not default white
-  
+
   // Debug logging
-  console.log('Section:', section.title, 'Global Color:', globalColor, 'Has Global Color Set:', hasGlobalColorSet);
+  console.log(
+    'Section:',
+    section.title,
+    'Global Color:',
+    globalColor,
+    'Has Global Color Set:',
+    hasGlobalColorSet
+  );
 
   const currentAssetId =
     currentAttribute &&
@@ -97,9 +105,13 @@ export const AttributeContent: React.FC<AttributeContentProps> = ({
     'r' in currentColorAttribute &&
     'g' in currentColorAttribute &&
     'b' in currentColorAttribute &&
-    (section.id === 'global-color' || 
-     hasGlobalColorSet ||
-     !(currentColorAttribute.r === 1 && currentColorAttribute.g === 1 && currentColorAttribute.b === 1));
+    (section.id === 'global-color' ||
+      hasGlobalColorSet ||
+      !(
+        currentColorAttribute.r === 1 &&
+        currentColorAttribute.g === 1 &&
+        currentColorAttribute.b === 1
+      ));
 
   // Fetch image URL when asset ID is available
   useEffect(() => {
@@ -136,8 +148,6 @@ export const AttributeContent: React.FC<AttributeContentProps> = ({
     attributeName: section.attributeName,
     imageType: section.imageType,
   };
-
-
 
   const colorConfig: ColorPickerConfig = {
     attributeName: getColorAttributeName(section.attributeName),
@@ -228,7 +238,9 @@ export const AttributeContent: React.FC<AttributeContentProps> = ({
                   // Handle delete functionality
                   if (currentColor) {
                     const defaultColor = { r: 1, g: 1, b: 1 };
-                    const colorAttrName = getColorAttributeName(section.attributeName);
+                    const colorAttrName = getColorAttributeName(
+                      section.attributeName
+                    );
 
                     // Update Threekit configurator.
                     if (window.threekit?.configurator?.setConfiguration) {
@@ -275,34 +287,33 @@ export const AttributeContent: React.FC<AttributeContentProps> = ({
             </>
           ) : (
             <>
-              {section.showColorButton && 
-                (section.id === 'global-color' || hasGlobalColorSet) && (
-                <BaseButton
-                  variant="muted"
-                  onClick={() => {
-                    if (section.id === 'global-color') {
-                      // Global color modal - uses 'Set_Color'
-                      setShowColorModal(true);
-                    } else {
-                      // Specific section color modal - uses 'Set_Color_XX'
-                      setShowColorModal(true);
-                    }
-                  }}
-                >
-                  Set Color
-                </BaseButton>
-              )}
               {section.showColorButton &&
-                (section.id !== 'global-color') && (
+                (section.id === 'global-color' || hasGlobalColorSet) && (
                   <BaseButton
                     variant="muted"
                     onClick={() => {
-                      setShowColorModal(true);
+                      if (section.id === 'global-color') {
+                        // Global color modal - uses 'Set_Color'
+                        setShowColorModal(true);
+                      } else {
+                        // Specific section color modal - uses 'Set_Color_XX'
+                        setShowColorModal(true);
+                      }
                     }}
                   >
                     Set Color
                   </BaseButton>
                 )}
+              {section.showColorButton && section.id !== 'global-color' && (
+                <BaseButton
+                  variant="muted"
+                  onClick={() => {
+                    setShowColorModal(true);
+                  }}
+                >
+                  Set Color
+                </BaseButton>
+              )}
               <BaseButton
                 variant="primary"
                 onClick={() => setShowImageModal(true)}

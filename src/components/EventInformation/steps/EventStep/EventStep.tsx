@@ -6,8 +6,10 @@ import s from './EventStep.module.scss';
 
 const EventStep = ({
   handleStepClick,
+  onClose,
 }: {
   handleStepClick: (stepId: string) => void;
+  onClose?: () => void;
 }) => {
   return (
     <>
@@ -28,7 +30,7 @@ const EventStep = ({
         />
       </div>
       <div className={s.bottom_buttons}>
-        <BaseButton variant="muted">
+        <BaseButton variant="muted" onClick={onClose}>
           <BackArrow /> Exit customizer{' '}
         </BaseButton>
         <BaseButton variant="primary" onClick={() => handleStepClick('setup')}>

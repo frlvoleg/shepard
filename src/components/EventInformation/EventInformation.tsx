@@ -5,6 +5,9 @@ import s from './EventInformation.module.scss';
 import EventStep from './steps/EventStep/EventStep';
 import CompanyStep from './steps/CompanyStep/CompanyStep';
 import card_image from '../../assets/base_image.png';
+import card_image2 from '../../assets/img/createPopup/des_2.jpg';
+import card_image3 from '../../assets/img/createPopup/des_3.jpg';
+import card_image4 from '../../assets/img/createPopup/des_3.jpg';
 import BoothStep from './steps/BoothStep/BoothStep';
 
 interface EventInformationProps {
@@ -33,19 +36,19 @@ const data = [
     id: 'curve-2',
     title: 'Curve Wall 2',
     price: '$12,416.75',
-    image: card_image,
+    image: card_image2,
   },
   {
     id: 'premium',
     title: 'Premium',
     price: '$19,394.20',
-    image: card_image,
+    image: card_image3,
   },
   {
     id: 'display-2',
     title: 'Display 2',
     price: '$10,179.75',
-    image: card_image,
+    image: card_image4,
   },
 ];
 
@@ -83,7 +86,7 @@ const EventInformation: React.FC<EventInformationProps> = ({
       <div>
         <div className={s.stepContent}>
           {currentStepId === 'event' && (
-            <EventStep handleStepClick={handleStepClick} />
+            <EventStep handleStepClick={handleStepClick} onClose={onClose} />
           )}
 
           {currentStepId === 'setup' && (

@@ -31,7 +31,10 @@ export const PlayerWidget = () => {
   };
 
   return (
-    <div className={s.playerWidget} id="productContainer">
+    <div
+      className={`${s.playerWidget} ${currentStepId === 'cart' && s.playerWidget_cart}`}
+      id="productContainer"
+    >
       <div
         className={`${s.playerContainer} ${currentStepId === 'cart' && 'cart'} `}
       >
@@ -43,7 +46,7 @@ export const PlayerWidget = () => {
           />
         ) : (
           <div>
-            <h2>Your Configuration</h2>
+            <h2 className={s.cart_info_title}>Your Configuration</h2>
             <div className={s.parent}>
               <div className={s.info_item}>
                 <h5>Booth Configuration</h5>

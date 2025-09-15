@@ -40,3 +40,19 @@
   grid-column-gap: 15px;
   grid-row-gap: px;
 }
+
+.cart_info_title {
+  margin-bottom: 10px;
+}
+
+.threekitPlayer {
+  margin-top: 35px;
+}
+
+@media (max-width: 1900px) {
+  .playerWidget_cart {
+    .threekitPlayer {
+      margin-top: 15px;
+    }
+  }
+}

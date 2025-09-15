@@ -97,16 +97,15 @@ export const AttributeContent: React.FC<AttributeContentProps> = ({
       : null;
 
   // Check if current color attribute has a color value
-  // For global color section, always show color (including default)
-  // For other sections, only show color if it's not the default white or if global color was changed
+  // Each section should only show its own color, not inherit from global color
   const isColorAttribute =
     currentColorAttribute &&
     typeof currentColorAttribute === 'object' &&
     'r' in currentColorAttribute &&
     'g' in currentColorAttribute &&
     'b' in currentColorAttribute &&
+    // Only show color if it's the global color section OR this section has its own non-default color
     (section.id === 'global-color' ||
-      hasGlobalColorSet ||
       !(
         currentColorAttribute.r === 1 &&
         currentColorAttribute.g === 1 &&
@@ -287,24 +286,7 @@ export const AttributeContent: React.FC<AttributeContentProps> = ({
             </>
           ) : (
             <>
-              {section.showColorButton &&
-                (section.id === 'global-color' || hasGlobalColorSet) && (
-                  <BaseButton
-                    variant="muted"
-                    onClick={() => {
-                      if (section.id === 'global-color') {
-                        // Global color modal - uses 'Set_Color'
-                        setShowColorModal(true);
-                      } else {
-                        // Specific section color modal - uses 'Set_Color_XX'
-                        setShowColorModal(true);
-                      }
-                    }}
-                  >
-                    Set Color
-                  </BaseButton>
-                )}
-              {section.showColorButton && section.id !== 'global-color' && (
+              {section.showColorButton && (
                 <BaseButton
                   variant="muted"
                   onClick={() => {
